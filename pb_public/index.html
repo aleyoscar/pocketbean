@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>PocketBean</title>
+		<link rel="stylesheet" href="pico.cyan.min.css">
+		<link rel="stylesheet" href="style.css">
+		<script src="scripts/pocketbase.umd.js" defer></script>
+		<script src="scripts/helpers.js" defer></script>
+		<script src="scripts/dom.js" defer></script>
+		<script src="scripts/constants.js" defer></script>
+		<script src="scripts/modal.js" defer></script>
+		<script src="scripts/components.js" defer></script>
+		<script src="scripts/render.js" defer></script>
+		<script src="scripts/auth.js" defer></script>
+		<script src="scripts/manage.js" defer></script>
+		<script src="scripts/events.js" defer></script>
+		<script src="index.js" defer></script>
+	</head>
+	<body>
+		<div id="wrapper" class="container">
+			<header>
+				<nav class="flex space-between">
+					<ul>
+						<li><strong>PocketBean</strong></li>
+					</ul>
+					<ul>
+						<li>
+							<details class="dropdown">
+								<summary id="account"></summary>
+								<ul dir="rtl">
+									<li><a id="logout" class="pointer">Logout</a></li>
+								</ul>
+							</details>
+						</li>
+					</ul>
+				</nav>
+			</header>
+			<main class="grid grid-xxs">
+				<aside>
+					<article>
+						<h3>Menu</h3>
+						<nav>
+							<ul>
+								<li>
+									<a id="accounts-btn" class="pointer aside-btn secondary" data-section="accounts">Accounts</a>
+								</li>
+								<li>
+									<a id="commodities-btn" class="pointer aside-btn secondary" data-section="commodities">Commodities</a>
+								</li>
+								<li>
+									<a id="transactions-btn" class="pointer aside-btn" data-section="transactions">Transactions</a>
+								</li>
+							</ul>
+						</nav>
+					</article>
+				</aside>
+				<section id="accounts" class="hide">
+					<h2>Accounts</h2>
+					<button id="account-add-btn" class="entry-fieldset-btn" data-fieldset="account">Add</button>
+					<div id="account-list"></div>
+				</section>
+				<section id="commodities" class="hide">
+					<h2>Commodities</h2>
+					<button id="commodity-add-btn" class="entry-fieldset-btn" data-fieldset="commodity">Add</button>
+					<table>
+						<thead>
+							<tr><th scope="col">Name</th></tr>
+						</thead>
+						<tbody id="commodity-list"></tbody>
+					</table>
+				</section>
+				<section id="transactions">
+					<h2>Transactions</h2>
+					<button id="transaction-add-btn" class="entry-fieldset-btn" data-fieldset="transaction">Add</button>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Flag</th>
+								<th scope="col">Payee</th>
+								<th scope="col">Narration</th>
+								<th scope="col">Tags</th>
+								<th scope="col">Links</th>
+								<th scope="col">Amount</th>
+							</tr>
+						</thead>
+						<tbody id="transaction-list"></tbody>
+					</table>
+				</section>
+			</main>
+			<footer></footer>
+		</div>
+
+		<form id="login" class="container">
+			<textarea id="login-error" class="hide" name="login-error" aria-invalid="true" readonly></textarea>
+			<fieldset>
+				<label>
+					Username
+					<input name="username" placeholder="Username" required>
+				</label>
+				<label>
+					Password
+					<input type="password" name="password" placeholder="Password" required>
+				</label>
+			</fieldset>
+			<input type="submit" value="Login">
+		</form>
+
+		<dialog id="entry">
+			<article>
+				<header>
+					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="entry"></button>
+					<h2 id="entry-title">Entry</h2>
+				</header>
+				<nav id="entry-nav">
+					<ul>
+						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="account">Account</a></li>
+						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="commodity">Commodity</a></li>
+						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="transaction">Transaction</a></li>
+					</ul>
+				</nav>
+				<form id="entry-form">
+					<input type="hidden" id="entry-id" name="entry-id" value="">
+					<input type="hidden" id="entry-type" name="entry-type" value="">
+					<textarea id="entry-error" class="hide" name="entry-error" aria-invalid="true" readonly></textarea>
+					<fieldset id="entry-account" class="entry-fieldset hide">
+						<input
+							type="text"
+							id="entry-account-name"
+							name="entry-account-name"
+							placeholder="AccountName"
+							aria-label="AccountName">
+					</fieldset>
+					<fieldset id="entry-commodity" class="entry-fieldset hide">
+						<input
+							type="text"
+							id="entry-commodity-name"
+							name="entry-commodity-name"
+							placeholder="COMMODITY"
+							aria-label="COMMODITY">
+					</fieldset>
+					<fieldset id="entry-transaction" class="entry-fieldset hide">
+						<input
+							type="text"
+							id="entry-transaction-payee"
+							name="entry-transaction-payee"
+							placeholder="Payee"
+							aria-label="Payee">
+					</fieldset>
+				</form>
+				<footer>
+					<button class="toggle-modal secondary" data-target="entry">Cancel</button>
+					<button id="entry-submit" data-target="entry" form="entry-form">Submit</button>
+				</footer>
+			</article>
+		</dialog>
+	</body>
+</html>

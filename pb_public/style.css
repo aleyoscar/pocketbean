@@ -1,0 +1,12 @@
+/*
+Widths  1536 1280 1024 768   576 324 243
+Padding                1rem
+	    xxl  xl   lg   md    sm  xs  xxs
+*/
+
+.flex { display: flex; }
+.grid-xxs { grid-template-columns: 243px 1fr; }
+.hide { display: none; }
+.pointer { cursor: pointer; }
+.row-hover:hover, .row-hover:active { background-color: var(--pico-table-row-stripped-background-color); }
+.space-between { justify-content: space-between; }
