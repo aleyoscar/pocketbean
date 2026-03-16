@@ -5,4 +5,9 @@ function attachListeners() {
 	DOM.login.addEventListener('submit', login);
 	DOM.logout.addEventListener('click', logout);
 	DOM.toggleModals.forEach((m) => m.addEventListener('click', toggleModal));
+
+	DOM.commodityList.addEventListener('click', (e) => {
+		const commodityRow = e.target.closest('.commodity-row');
+		if (commodityRow) openFieldsetTarget(commodityRow);
+	});
 }

@@ -6,20 +6,20 @@ async function submitEntry(e) {
 		const formData = new FormData(DOM.entryForm);
 		const type = formData.get('entry-type');
 		const id = formData.get('entry-id');
+		let record;
 		switch(type) {
 			case 'account':
 				break;
 			case 'commodity':
-				if (!id) {
-					const record = await pb.collection('commodities').create({
-						"user": pb.authStore.record.id,
-						"name": formData.get('entry-commodity-name')
-					});
-					renderCommodities();
+				const commodityData = {
+					"user": pb.authStore.record.id,
+					"name": formData.get('entry-commodity-name')
 				}
+				if (id) record = await pb.collection('commodities').update(id, commodityData);
+				else record = await pb.collection('commodities').create(commodityData);
+				renderCommodities();
 				break;
 			case 'transaction':
-
 				break;
 			default:
 				throw new Error(`Type ${type} does not exist`);
@@ -29,5 +29,21 @@ async function submitEntry(e) {
 		DOM.entryError.textContent = err;
 		DOM.entryError.classList.remove('hide');
 		console.error(`Unable to update entry`, err);
+	}
+}
+
+async function editCommodity(id) {
+	DOM.entryError.classList.add('hide');
+	DOM.entryError.textContent = '';
+	try {
+		const record = await pb.collection('commodities').getOne(id);
+		if (!record) throw new Error(`Unable to edit commodity with id ${id}`);
+		DOM.entryTitle.textContent = 'Edit Commodity';
+		DOM.entryCommodityName.value = record.name;
+		DOM.entryNav.classList.add('hide');
+	} catch (err) {
+		DOM.entryError.textContent = err;
+		DOM.entryError.classList.remove('hide');
+		console.error('Unable to edit commodity', err);
 	}
 }

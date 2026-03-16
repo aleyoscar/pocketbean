@@ -15,13 +15,24 @@ function openSection(e) {
 function openFieldset(e) {
 	e.preventDefault();
 	DOM.entryForm.reset();
-	const fieldset = e.currentTarget.dataset.fieldset;
+	DOM.entryNav.classList.remove('hide');
+	openFieldsetTarget(e.currentTarget);
+}
+
+function openFieldsetTarget(target) {
+	const fieldset = target.dataset.fieldset;
 	DOM.entryType.value = fieldset;
 	DOM.entryFieldsets.forEach((f) =>
 		f.classList.toggle('hide', !f.id.includes(fieldset)));
 	DOM.entryNavFieldsetBtns.forEach((b) =>
 		b.classList.toggle('secondary', b.dataset.fieldset != fieldset));
 	DOM.entryTitle.textContent = capitalize(fieldset);
+	if (target.dataset.id) {
+		DOM.entryId.value = target.dataset.id;
+		editCommodity(target.dataset.id);
+	} else {
+		DOM.entryId.value = '';
+	}
 	if (!visibleModal) openModal(DOM.entry);
 }
 
@@ -30,6 +41,8 @@ async function renderCommodities() {
 	DOM.commodityList.innerHTML = '';
 	records.forEach((r) => {
 		DOM.commodityList.append(createElement('tr', {
+			class: 'commodity-row',
+			dataset: { id: r.id, fieldset: 'commodity' },
 			children: [
 				createElement('th', {
 					class: 'pointer row-hover',
