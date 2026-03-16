@@ -5,8 +5,19 @@ Padding                1rem
 */
 
 .flex { display: flex; }
+.float-left { float: left; }
 .grid-xxs { grid-template-columns: 243px 1fr; }
 .hide { display: none; }
 .pointer { cursor: pointer; }
 .row-hover:hover, .row-hover:active { background-color: var(--pico-table-row-stripped-background-color); }
 .space-between { justify-content: space-between; }
+
+button.danger {
+	background-color: var(--pico-form-element-invalid-border-color);
+	border-color: var(--pico-form-element-invalid-border-color);
+}
+
+button.danger:hover {
+	background-color: var(--pico-form-element-invalid-active-border-color);
+	border-color: var(--pico-form-element-invalid-active-border-color);
+}

@@ -125,6 +125,7 @@
 				<form id="entry-form">
 					<input type="hidden" id="entry-id" name="entry-id" value="">
 					<input type="hidden" id="entry-type" name="entry-type" value="">
+					<input type="hidden" id="entry-delete" name="entry-delete" value="">
 					<textarea id="entry-error" class="hide" name="entry-error" aria-invalid="true" readonly></textarea>
 					<fieldset id="entry-account" class="entry-fieldset hide">
 						<input
@@ -152,6 +153,8 @@
 					</fieldset>
 				</form>
 				<footer>
+					<button id="entry-open-delete-btn" class="float-left secondary">Delete</button>
+					<button id="entry-delete-btn" class="float-left danger hide">Delete?</button>
 					<button class="toggle-modal secondary" data-target="entry">Cancel</button>
 					<button id="entry-submit" data-target="entry" form="entry-form">Submit</button>
 				</footer>

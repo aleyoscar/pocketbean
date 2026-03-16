@@ -6,17 +6,22 @@ async function submitEntry(e) {
 		const formData = new FormData(DOM.entryForm);
 		const type = formData.get('entry-type');
 		const id = formData.get('entry-id');
+		const del = formData.get('entry-delete');
 		let record;
 		switch(type) {
 			case 'account':
 				break;
 			case 'commodity':
-				const commodityData = {
-					"user": pb.authStore.record.id,
-					"name": formData.get('entry-commodity-name')
+				if (del && id) {
+					await pb.collection('commodities').delete(id);
+				} else {
+					const commodityData = {
+						"user": pb.authStore.record.id,
+						"name": formData.get('entry-commodity-name')
+					}
+					if (id) record = await pb.collection('commodities').update(id, commodityData);
+					else record = await pb.collection('commodities').create(commodityData);
 				}
-				if (id) record = await pb.collection('commodities').update(id, commodityData);
-				else record = await pb.collection('commodities').create(commodityData);
 				renderCommodities();
 				break;
 			case 'transaction':
@@ -32,6 +37,11 @@ async function submitEntry(e) {
 	}
 }
 
+async function deleteEntry(e) {
+	DOM.entryDelete.value = 'delete';
+	submitEntry(e);
+}
+
 async function editCommodity(id) {
 	DOM.entryError.classList.add('hide');
 	DOM.entryError.textContent = '';
@@ -41,6 +51,7 @@ async function editCommodity(id) {
 		DOM.entryTitle.textContent = 'Edit Commodity';
 		DOM.entryCommodityName.value = record.name;
 		DOM.entryNav.classList.add('hide');
+		DOM.entryOpenDeleteBtn.classList.remove('hide');
 	} catch (err) {
 		DOM.entryError.textContent = err;
 		DOM.entryError.classList.remove('hide');
