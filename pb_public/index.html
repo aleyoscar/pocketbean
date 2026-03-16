@@ -60,7 +60,16 @@
 				<section id="accounts" class="hide">
 					<h2>Accounts</h2>
 					<button id="account-add-btn" class="entry-fieldset-btn" data-fieldset="account">Add</button>
-					<div id="account-list"></div>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Account</th>
+								<th scope="col">Commodity</th>
+								<th scope="col">Comment</th>
+							</tr>
+						</thead>
+						<tbody id="account-list"></tbody>
+					</table>
 				</section>
 				<section id="commodities" class="hide">
 					<h2>Commodities</h2>
@@ -132,8 +141,20 @@
 							type="text"
 							id="entry-account-name"
 							name="entry-account-name"
+							list="account-datalist"
 							placeholder="AccountName"
 							aria-label="AccountName">
+						<select
+							id="entry-account-commodity"
+							name="entry-account-commodity"
+							aria-label="Commodity">
+						</select>
+						<input
+							type="text"
+							id="entry-account-comment"
+							name="entry-account-comment"
+							placeholder="Account Description"
+							aria-label="Account Description">
 					</fieldset>
 					<fieldset id="entry-commodity" class="entry-fieldset hide">
 						<input
@@ -160,5 +181,7 @@
 				</footer>
 			</article>
 		</dialog>
+
+		<datalist id="account-datalist"></datalist>
 	</body>
 </html>

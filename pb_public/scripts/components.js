@@ -6,6 +6,7 @@ function createElement(tag, options = {}) {
 	if (options.textContent) el.textContent = options.textContent;
 	if (options.type) el.type = options.type;
 	if (options.checked) el.checked = options.checked;
+	if (options.value) el.value = options.value;
 
 	if (options.dataset) {
 		Object.entries(options.dataset).forEach(([key, value]) => {

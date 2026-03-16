@@ -9,7 +9,12 @@ Padding                1rem
 .grid-xxs { grid-template-columns: 243px 1fr; }
 .hide { display: none; }
 .pointer { cursor: pointer; }
-.row-hover:hover, .row-hover:active { background-color: var(--pico-table-row-stripped-background-color); }
+.row-hover:hover,
+.row-hover:active,
+.row-hover:hover th,
+.row-hover:active th,
+.row-hover:hover td,
+.row-hover:active td { background-color: var(--pico-table-row-stripped-background-color); }
 .space-between { justify-content: space-between; }
 
 button.danger {

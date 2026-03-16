@@ -10,6 +10,19 @@ async function submitEntry(e) {
 		let record;
 		switch(type) {
 			case 'account':
+				if (del && id) {
+					await pb.collection('accounts').delete(id);
+				} else {
+					const accountData = {
+						"user": pb.authStore.record.id,
+						"name": formData.get('entry-account-name'),
+						"commodity": formData.get('entry-account-commodity'),
+						"comment": formData.get('entry-account-comment'),
+					}
+					if (id) record = await pb.collection('accounts').update(id, accountData);
+					else record = await pb.collection('accounts').create(accountData);
+				}
+				renderAccounts();
 				break;
 			case 'commodity':
 				if (del && id) {
@@ -40,6 +53,25 @@ async function submitEntry(e) {
 async function deleteEntry(e) {
 	DOM.entryDelete.value = 'delete';
 	submitEntry(e);
+}
+
+async function editAccount(id) {
+	DOM.entryError.classList.add('hide');
+	DOM.entryError.textContent = '';
+	try {
+		const record = await pb.collection('accounts').getOne(id, { expand: 'commodity' });
+		if (!record) throw new Error(`Unable to edit account with id ${id}`);
+		DOM.entryTitle.textContent = 'Edit Account';
+		DOM.entryAccountName.value = record.name;
+		selectOption(DOM.entryAccountCommodity, record.expand['commodity'].id);
+		DOM.entryAccountComment.value = record.comment;
+		DOM.entryNav.classList.add('hide');
+		DOM.entryOpenDeleteBtn.classList.remove('hide');
+	} catch (err) {
+		DOM.entryError.textContent = err;
+		DOM.entryError.classList.remove('hide');
+		console.error('Unable to edit account', err);
+	}
 }
 
 async function editCommodity(id) {
