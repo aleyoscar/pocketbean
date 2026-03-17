@@ -77,6 +77,7 @@ async function renderTransactions() {
 	DOM.tagsDatalist.innerHTML = '';
 	DOM.linksDatalist.innerHTML = '';
 	DOM.accountDatalist.innerHTML = '';
+	DOM.accountList.innerHTML = '';
 	data.txns.forEach((txn) => {
 		DOM.transactionList.append(createElement('tr', {
 			class: 'transaction-row pointer row-hover',
@@ -103,6 +104,12 @@ async function renderTransactions() {
 	});
 	data.accounts.forEach((account) => {
 		DOM.accountDatalist.append(createElement('option', { value: account }));
+		DOM.accountList.append(createElement('tr', {
+			class: 'account-row pointer row-hover',
+			children: [
+				createElement('th', { attributes: { scope: 'row' }, textContent: account }),
+			]
+		}));
 	});
 }
 
