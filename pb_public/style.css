@@ -1,11 +1,14 @@
 /*
-Widths  1536 1280 1024 768   576 324 243
-Padding                1rem
-	    xxl  xl   lg   md    sm  xs  xxs
+Widths  1536 1280 1024 768   576    324 243
+Padding                1rem  0.6rem
+        xxl  xl   lg   md    sm     xs  xxs
 */
 
 .flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
 .float-left { float: left; }
+.gap-md { gap: var(--pico-spacing); }
+.gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
 .grid-xxs { grid-template-columns: 243px 1fr; }
 .hide { display: none; }
 .pointer { cursor: pointer; }
@@ -26,3 +29,6 @@ button.danger:hover {
 	background-color: var(--pico-form-element-invalid-active-border-color);
 	border-color: var(--pico-form-element-invalid-active-border-color);
 }
+
+ul.no-decoration { padding-left: 0; }
+ul.no-decoration li { list-style: none; }

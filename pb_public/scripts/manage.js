@@ -1,92 +1,77 @@
-async function submitEntry(e) {
+function getPostings() {
+	return Array.from(DOM.transactionForm.querySelectorAll('.transaction-posting')).map((posting, i) => {
+		const account = posting.querySelector('.transaction-posting-account').value;
+		const amount = posting.querySelector('.transaction-posting-amount').value;
+		const order = i;
+		return { account, amount, order };
+	});
+}
+
+async function submitTransaction(e) {
 	e.preventDefault();
-	DOM.entryError.classList.add('hide');
-	DOM.entryError.textContent = '';
+	DOM.transactionError.classList.add('hide');
+	DOM.transactionError.textContent = '';
 	try {
-		const formData = new FormData(DOM.entryForm);
-		const type = formData.get('entry-type');
-		const id = formData.get('entry-id');
-		const del = formData.get('entry-delete');
+		const formData = new FormData(DOM.transactionForm);
+		const id = formData.get('transaction-id');
+		const del = formData.get('transaction-delete');
 		let record;
-		switch(type) {
-			case 'account':
-				if (del && id) {
-					await pb.collection('accounts').delete(id);
-				} else {
-					const accountData = {
-						"user": pb.authStore.record.id,
-						"name": formData.get('entry-account-name'),
-						"commodity": formData.get('entry-account-commodity'),
-						"comment": formData.get('entry-account-comment'),
-					}
-					if (id) record = await pb.collection('accounts').update(id, accountData);
-					else record = await pb.collection('accounts').create(accountData);
-				}
-				renderAccounts();
-				break;
-			case 'commodity':
-				if (del && id) {
-					await pb.collection('commodities').delete(id);
-				} else {
-					const commodityData = {
-						"user": pb.authStore.record.id,
-						"name": formData.get('entry-commodity-name')
-					}
-					if (id) record = await pb.collection('commodities').update(id, commodityData);
-					else record = await pb.collection('commodities').create(commodityData);
-				}
-				renderCommodities();
-				break;
-			case 'transaction':
-				break;
-			default:
-				throw new Error(`Type ${type} does not exist`);
+		if (del && id) {
+			await pb.collection('transactions').delete(id);
+		} else {
+			const data = {
+				"user": pb.authStore.record.id,
+				"date": localToUtc(formData.get('transaction-date')),
+				"flag": formData.get('transaction-flag') ? true : false,
+				"payee": formData.get('transaction-payee'),
+				"narration": formData.get('transaction-narration'),
+				"tags": formData.get('transaction-tags'),
+				"links": formData.get('transaction-links'),
+				"postings": getPostings(),
+			};
+			if (id) record = await pb.collection('transactions').update(id, data);
+			else record = await pb.collection('transactions').create(data);
 		}
-		closeModal(DOM.entry);
+		await renderTransactions();
+		closeModal(DOM.transactionModal);
 	} catch (err) {
-		DOM.entryError.textContent = err;
-		DOM.entryError.classList.remove('hide');
-		console.error(`Unable to update entry`, err);
+		DOM.transactionError.textContent = err;
+		DOM.transactionError.classList.remove('hide');
+		console.error(`Unable to update transaction`, err);
 	}
 }
 
-async function deleteEntry(e) {
-	DOM.entryDelete.value = 'delete';
-	submitEntry(e);
+async function deleteTransaction(e) {
+	DOM.transactionDelete.value = 'delete';
+	submitTransaction(e);
 }
 
-async function editAccount(id) {
-	DOM.entryError.classList.add('hide');
-	DOM.entryError.textContent = '';
+async function editTransaction(id) {
 	try {
-		const record = await pb.collection('accounts').getOne(id, { expand: 'commodity' });
+		const record = await pb.collection('transactions').getOne(id);
 		if (!record) throw new Error(`Unable to edit account with id ${id}`);
-		DOM.entryTitle.textContent = 'Edit Account';
-		DOM.entryAccountName.value = record.name;
-		selectOption(DOM.entryAccountCommodity, record.expand['commodity'].id);
-		DOM.entryAccountComment.value = record.comment;
-		DOM.entryNav.classList.add('hide');
-		DOM.entryOpenDeleteBtn.classList.remove('hide');
+		DOM.transactionTitle.textContent = 'Edit Transaction';
+		DOM.transactionId.value = id;
+		DOM.transactionOpenDeleteBtn.classList.remove('hide');
+		DOM.transactionDate.value = utcToLocal(record.date);
+		DOM.transactionFlag.checked = record.flag;
+		DOM.transactionPayee.value = record.payee;
+		DOM.transactionNarration.value = record.narration;
+		DOM.transactionTags.value = record.tags;
+		DOM.transactionLinks.value = record.links;
+		if (record.postings.length > 2) {
+			for (let i = 2; i < record.postings.length; i++) {
+				DOM.transactionPostings.append(createPosting());
+			}
+		}
+		record.postings.forEach((posting) => {
+			const postingEl = DOM.transactionForm.querySelector(`.transaction-posting-${posting.order}`);
+			postingEl.querySelector('.transaction-posting-account').value = posting.account;
+			postingEl.querySelector('.transaction-posting-amount').value = posting.amount;
+		});
 	} catch (err) {
-		DOM.entryError.textContent = err;
-		DOM.entryError.classList.remove('hide');
+		DOM.transactionError.textContent = err;
+		DOM.transactionError.classList.remove('hide');
 		console.error('Unable to edit account', err);
-	}
-}
-
-async function editCommodity(id) {
-	DOM.entryError.classList.add('hide');
-	DOM.entryError.textContent = '';
-	try {
-		const record = await pb.collection('commodities').getOne(id);
-		if (!record) throw new Error(`Unable to edit commodity with id ${id}`);
-		DOM.entryTitle.textContent = 'Edit Commodity';
-		DOM.entryCommodityName.value = record.name;
-		DOM.entryNav.classList.add('hide');
-		DOM.entryOpenDeleteBtn.classList.remove('hide');
-	} catch (err) {
-		DOM.entryError.textContent = err;
-		DOM.entryError.classList.remove('hide');
-		console.error('Unable to edit commodity', err);
 	}
 }

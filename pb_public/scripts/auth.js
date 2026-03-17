@@ -7,7 +7,7 @@ async function login(e) {
 		const username = formData.get('username');
 		const password = formData.get('password');
 		const authData = await pb.collection("users").authWithPassword(username, password);
-		DOM.login.reset();
+		DOM.loginForm.reset();
 	} catch (err) {
 		console.error('Unable to login', err);
 		DOM.loginError.textContent = err;

@@ -41,14 +41,10 @@
 			<main class="grid grid-xxs">
 				<aside>
 					<article>
-						<h3>Menu</h3>
 						<nav>
 							<ul>
 								<li>
 									<a id="accounts-btn" class="pointer aside-btn secondary" data-section="accounts">Accounts</a>
-								</li>
-								<li>
-									<a id="commodities-btn" class="pointer aside-btn secondary" data-section="commodities">Commodities</a>
 								</li>
 								<li>
 									<a id="transactions-btn" class="pointer aside-btn" data-section="transactions">Transactions</a>
@@ -59,31 +55,18 @@
 				</aside>
 				<section id="accounts" class="hide">
 					<h2>Accounts</h2>
-					<button id="account-add-btn" class="entry-fieldset-btn" data-fieldset="account">Add</button>
 					<table>
 						<thead>
 							<tr>
 								<th scope="col">Account</th>
-								<th scope="col">Commodity</th>
-								<th scope="col">Comment</th>
 							</tr>
 						</thead>
 						<tbody id="account-list"></tbody>
 					</table>
 				</section>
-				<section id="commodities" class="hide">
-					<h2>Commodities</h2>
-					<button id="commodity-add-btn" class="entry-fieldset-btn" data-fieldset="commodity">Add</button>
-					<table>
-						<thead>
-							<tr><th scope="col">Name</th></tr>
-						</thead>
-						<tbody id="commodity-list"></tbody>
-					</table>
-				</section>
 				<section id="transactions">
 					<h2>Transactions</h2>
-					<button id="transaction-add-btn" class="entry-fieldset-btn" data-fieldset="transaction">Add</button>
+					<button id="transaction-add-btn">Add</button>
 					<table>
 						<thead>
 							<tr>
@@ -103,7 +86,7 @@
 			<footer></footer>
 		</div>
 
-		<form id="login" class="container">
+		<form id="login-form" class="container">
 			<textarea id="login-error" class="hide" name="login-error" aria-invalid="true" readonly></textarea>
 			<fieldset>
 				<label>
@@ -118,70 +101,105 @@
 			<input type="submit" value="Login">
 		</form>
 
-		<dialog id="entry">
+		<dialog id="transaction-modal">
 			<article>
 				<header>
-					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="entry"></button>
-					<h2 id="entry-title">Entry</h2>
+					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="transaction-modal"></button>
+					<h2 id="transaction-title">Transaction</h2>
 				</header>
-				<nav id="entry-nav">
-					<ul>
-						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="account">Account</a></li>
-						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="commodity">Commodity</a></li>
-						<li><a class="pointer entry-fieldset-btn secondary" data-fieldset="transaction">Transaction</a></li>
-					</ul>
-				</nav>
-				<form id="entry-form">
-					<input type="hidden" id="entry-id" name="entry-id" value="">
-					<input type="hidden" id="entry-type" name="entry-type" value="">
-					<input type="hidden" id="entry-delete" name="entry-delete" value="">
-					<textarea id="entry-error" class="hide" name="entry-error" aria-invalid="true" readonly></textarea>
-					<fieldset id="entry-account" class="entry-fieldset hide">
+				<form id="transaction-form">
+					<input type="hidden" id="transaction-id" name="transaction-id" value="">
+					<input type="hidden" id="transaction-delete" name="transaction-delete" value="">
+					<textarea id="transaction-error" class="hide" name="transaction-error" aria-invalid="true" readonly></textarea>
+					<fieldset>
+						<input
+							type="date"
+							id="transaction-date"
+							name="transaction-date"
+							aria-label="Date"
+							required>
+						<label>
+							<input
+								id="transaction-flag"
+								name="transaction-flag"
+								type="checkbox"
+								role="switch">Cleared</label>
 						<input
 							type="text"
-							id="entry-account-name"
-							name="entry-account-name"
-							list="account-datalist"
-							placeholder="AccountName"
-							aria-label="AccountName">
-						<select
-							id="entry-account-commodity"
-							name="entry-account-commodity"
-							aria-label="Commodity">
-						</select>
-						<input
-							type="text"
-							id="entry-account-comment"
-							name="entry-account-comment"
-							placeholder="Account Description"
-							aria-label="Account Description">
-					</fieldset>
-					<fieldset id="entry-commodity" class="entry-fieldset hide">
-						<input
-							type="text"
-							id="entry-commodity-name"
-							name="entry-commodity-name"
-							placeholder="COMMODITY"
-							aria-label="COMMODITY">
-					</fieldset>
-					<fieldset id="entry-transaction" class="entry-fieldset hide">
-						<input
-							type="text"
-							id="entry-transaction-payee"
-							name="entry-transaction-payee"
+							id="transaction-payee"
+							name="transaction-payee"
+							list="payee-datalist"
 							placeholder="Payee"
 							aria-label="Payee">
+						<input
+							type="text"
+							id="transaction-narration"
+							name="transaction-narration"
+							placeholder="Narration"
+							aria-label="Narration">
+						<input
+							type="text"
+							id="transaction-tags"
+							name="transaction-tags"
+							list="tags-datalist"
+							placeholder="Tags"
+							aria-label="Tags">
+						<input
+							type="text"
+							id="transaction-links"
+							name="transaction-links"
+							list="links-datalist"
+							placeholder="Links"
+							aria-label="Links">
+						<hr>
+					</fieldset>
+					<fieldset>
+						<div role="group" class="transaction-posting transaction-posting-0">
+							<input
+								type="text"
+								class="transaction-posting-account"
+								list="account-datalist"
+								placeholder="Account"
+								aria-label="Account"
+								required>
+							<input
+								type="text"
+								class="transaction-posting-amount"
+								placeholder="Amount"
+								aria-label="Amount"
+								required>
+						</div>
+						<div role="group" class="transaction-posting transaction-posting-1">
+							<input
+								type="text"
+								class="transaction-posting-account"
+								list="account-datalist"
+								placeholder="Account"
+								aria-label="Account"
+								required>
+							<input
+								type="text"
+								class="transaction-posting-amount"
+								placeholder="Amount"
+								aria-label="Amount"
+								required>
+						</div>
+						<div id="transaction-postings"></div>
+						<button id="transaction-add-posting-btn">Add Split</button>
 					</fieldset>
 				</form>
 				<footer>
-					<button id="entry-open-delete-btn" class="float-left secondary">Delete</button>
-					<button id="entry-delete-btn" class="float-left danger hide">Delete?</button>
-					<button class="toggle-modal secondary" data-target="entry">Cancel</button>
-					<button id="entry-submit" data-target="entry" form="entry-form">Submit</button>
+					<button id="transaction-open-delete-btn" class="float-left secondary">Delete</button>
+					<button id="transaction-delete-btn" class="float-left danger hide">Delete?</button>
+					<button class="toggle-modal secondary" data-target="transaction-modal">Cancel</button>
+					<button id="transaction-submit" data-target="transaction-modal" form="transaction-form">Submit</button>
 				</footer>
 			</article>
 		</dialog>
 
+		<datalist id="payee-datalist"></datalist>
+		<datalist id="tags-datalist"></datalist>
+		<datalist id="links-datalist"></datalist>
 		<datalist id="account-datalist"></datalist>
 	</body>
 </html>

@@ -1,8 +1,7 @@
 function bootstrap() {
 	attachListeners();
 	toggleAuth();
-	renderCommodities();
-	renderAccounts();
+	renderTransactions();
 }
 
 bootstrap();

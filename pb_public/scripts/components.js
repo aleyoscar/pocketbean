@@ -7,6 +7,8 @@ function createElement(tag, options = {}) {
 	if (options.type) el.type = options.type;
 	if (options.checked) el.checked = options.checked;
 	if (options.value) el.value = options.value;
+	if (options.placeholder) el.placeholder = options.placeholder;
+	if (options.required) el.required = true;
 
 	if (options.dataset) {
 		Object.entries(options.dataset).forEach(([key, value]) => {
@@ -32,4 +34,27 @@ function createElement(tag, options = {}) {
 
 	if (options.innerHTML) el.innerHTML = options.innerHTML;
 	return el;
+}
+
+function createPosting() {
+	return createElement('div', {
+		attributes: { role: 'group', class: `transaction-posting transaction-posting-${2 + DOM.transactionPostings.children.length}` },
+		children: [
+			createElement('input', {
+				type: 'text',
+				class: 'transaction-posting-account',
+				placeholder: 'Account',
+				attributes: { 'aria-label': 'Account', list: 'account-datalist' },
+				required: true,
+			}),
+			createElement('input', {
+				type: 'text',
+				class: 'transaction-posting-amount',
+				placeholder: 'Amount',
+				attributes: { 'aria-label': 'Amount' },
+				required: true,
+			}),
+			createElement('button', { textContent: 'X', class: 'transaction-delete-posting-btn' }),
+		],
+	});
 }
