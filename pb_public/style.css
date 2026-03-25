@@ -1,7 +1,8 @@
 /*
-Widths  1536 1280 1024 768   576    324 243
-Padding                1rem  0.6rem
-        xxl  xl   lg   md    sm     xs  xxs
+Widths  1536   1280   1024   768   576    356    220
+Padding 4.2rem 2.6rem 1.6rem 1rem  0.6rem 0.4rem 0.2rem
+Column  576    356    220    136   84     52     32
+        xxl    xl     lg     md    sm     xs     xxs
 */
 
 :root, :host {
@@ -21,17 +22,23 @@ Padding                1rem  0.6rem
 	/* --pico-heading-font-weight: 600; */
 }
 
-.align-center: { align-items: center; }
+.align-center { align-items: center; }
+.col-width-lg { width: 220px; }
+.col-width-md { width: 136px; }
+.col-width-sm { width: 84px; }
 .flex { display: flex; }
 .flex-wrap { flex-wrap: wrap; }
 .float-left { float: left; }
 .float-right { float: right; }
 .gap-md { gap: var(--pico-spacing); }
 .gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
-.grid-xxs { grid-template-columns: 243px 1fr; }
+.grid-xxs { grid-template-columns: 220px 1fr; }
 .hide { display: none; }
 .pl-btn { padding-left: calc(66.2px - var(--pico-border-width)); }
 .pointer { cursor: pointer; }
+.row-background,
+.row-background th,
+.row-background td,
 .row-hover:hover,
 .row-hover:active,
 .row-hover:hover th,
@@ -39,6 +46,7 @@ Padding                1rem  0.6rem
 .row-hover:hover td,
 .row-hover:active td { background-color: var(--pico-table-row-stripped-background-color); }
 .space-between { justify-content: space-between; }
+.text-right { text-align: right; }
 
 button.danger {
 	background-color: var(--pico-form-element-invalid-border-color);

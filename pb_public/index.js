@@ -284,6 +284,12 @@ function createPosting() {
 
 // ===================== RENDER =====================
 
+function togglePostings(target) {
+	DOM.transactionList.querySelectorAll('.transaction-posting-row').forEach(row => {
+		if (row.dataset.transaction === target.dataset.id) row.classList.toggle('hide');
+	});
+}
+
 function toggleAuth() {
 	const isLoggedIn = !!pb.authStore.record;
 	DOM.wrapper.classList.toggle('hide', !isLoggedIn);
@@ -437,13 +443,33 @@ async function renderPostings() {
 
 async function renderTransactions() {
 	const records = await pb.collection('transactions').getFullList({
-		sort: '-date,created'
+		sort: '-date,created',
+		expand: 'postings_via_transaction,postings_via_transaction.account,postings_via_transaction.currency',
 	});
 
 	DOM.transactionList.innerHTML = '';
 	const payees = new Set();
 
 	for (const txn of records) {
+		let txnAmount = 0;
+		const postings = txn.expand.postings_via_transaction;
+		const postingRows = [];
+		postings.sort((a, b) => (a.order || 0) - (b.order || 0));
+		for (const posting of postings) {
+			txnAmount += posting.amount > 0 ? posting.amount : 0;
+			postingRows.push(createElement('tr', {
+				class: `transaction-posting-row pointer row-background hide`,
+				dataset: { transaction: txn.id },
+				children: [
+					createElement('td'),
+					createElement('td'),
+					createElement('td'),
+					createElement('td', { textContent: posting.expand.account.name }),
+					createElement('td', { textContent: cur(posting.amount), class: 'text-right' }),
+					createElement('td', { textContent: posting.expand.currency.name, class: 'text-right' }),
+				]
+			}));
+		}
 		DOM.transactionList.append(createElement('tr', {
 			class: 'transaction-row pointer row-hover',
 			dataset: { id: txn.id },
@@ -452,8 +478,20 @@ async function renderTransactions() {
 				createElement('td', { textContent: txn.flag ? '*' : '!' }),
 				createElement('td', { textContent: txn.payee }),
 				createElement('td', { textContent: txn.notes || '' }),
+				createElement('td', { textContent: cur(txnAmount), class: 'text-right' }),
+				createElement('td', {
+					class: 'text-right',
+					children: [
+						createElement('button', {
+							class: 'transaction-edit-btn',
+							textContent: 'Edit',
+							dataset: { id: txn.id },
+						}),
+					],
+				}),
 			]
 		}));
+		postingRows.forEach(row => DOM.transactionList.append(row));
 		if (txn.payee) payees.add(txn.payee);
 	}
 
@@ -812,8 +850,11 @@ function attachListeners() {
 	});
 
 	DOM.transactionList.addEventListener('click', (e) => {
+		const editBtn = e.target.closest('.transaction-edit-btn');
+		if (editBtn) openTargetTransactionForm(editBtn);
+
 		const row = e.target.closest('.transaction-row');
-		if (row) openTargetTransactionForm(row);
+		if (row) togglePostings(row);
 	});
 
 	DOM.transactionPostings.addEventListener('click', (e) => {
