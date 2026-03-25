@@ -4,13 +4,33 @@ Padding                1rem  0.6rem
         xxl  xl   lg   md    sm     xs  xxs
 */
 
+:root, :host {
+	--pico-font-size: 87.5%;
+	--pico-line-height: 1.25;
+	--pico-spacing: 0.75rem;
+	--pico-block-spacing-vertical: 0.75rem;
+	--pico-block-spacing-horizontal: 0.75rem;
+	--pico-form-element-spacing-vertical: 0.5rem;
+	--pico-form-element-spacing-horizontal: 0.75rem;
+	--pico-button-spacing-vertical: 0.5rem;
+	--pico-button-spacing-horizontal: 1rem;
+
+	--pico-border-radius: 0.25rem;
+	--pico-border-width: 0.0625rem;
+
+	/* --pico-heading-font-weight: 600; */
+}
+
+.align-center: { align-items: center; }
 .flex { display: flex; }
 .flex-wrap { flex-wrap: wrap; }
 .float-left { float: left; }
+.float-right { float: right; }
 .gap-md { gap: var(--pico-spacing); }
 .gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
 .grid-xxs { grid-template-columns: 243px 1fr; }
 .hide { display: none; }
+.pl-btn { padding-left: calc(66.2px - var(--pico-border-width)); }
 .pointer { cursor: pointer; }
 .row-hover:hover,
 .row-hover:active,

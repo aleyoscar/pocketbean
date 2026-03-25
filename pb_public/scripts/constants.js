@@ -1,1 +1,0 @@
-const pb = new PocketBase("/");

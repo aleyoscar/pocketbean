@@ -7,16 +7,7 @@
 		<title>PocketBean</title>
 		<link rel="stylesheet" href="pico.cyan.min.css">
 		<link rel="stylesheet" href="style.css">
-		<script src="scripts/pocketbase.umd.js" defer></script>
-		<script src="scripts/helpers.js" defer></script>
-		<script src="scripts/dom.js" defer></script>
-		<script src="scripts/constants.js" defer></script>
-		<script src="scripts/modal.js" defer></script>
-		<script src="scripts/components.js" defer></script>
-		<script src="scripts/render.js" defer></script>
-		<script src="scripts/auth.js" defer></script>
-		<script src="scripts/manage.js" defer></script>
-		<script src="scripts/events.js" defer></script>
+		<script src="pocketbase.umd.js" defer></script>
 		<script src="index.js" defer></script>
 	</head>
 	<body>
@@ -47,6 +38,9 @@
 									<a id="accounts-btn" class="pointer aside-btn secondary" data-section="accounts">Accounts</a>
 								</li>
 								<li>
+									<a id="currencies-btn" class="pointer aside-btn secondary" data-section="currencies">Currencies</a>
+								</li>
+								<li>
 									<a id="transactions-btn" class="pointer aside-btn" data-section="transactions">Transactions</a>
 								</li>
 							</ul>
@@ -54,29 +48,39 @@
 					</article>
 				</aside>
 				<section id="accounts" class="hide">
-					<h2>Accounts</h2>
+					<h2>Accounts <button id="account-add-btn">Add</button></h2>
 					<table>
 						<thead>
 							<tr>
 								<th scope="col">Account</th>
+								<th scope="col">Currency</th>
 							</tr>
 						</thead>
 						<tbody id="account-list"></tbody>
 					</table>
 				</section>
+				<section id="currencies" class="hide">
+					<h2>Currencies <button id="currency-add-btn">Add</button></h2>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Currency</th>
+								<th scope="col">Default</th>
+							</tr>
+						</thead>
+						<tbody id="currency-list"></tbody>
+					</table>
+				</section>
 				<section id="transactions">
-					<h2>Transactions</h2>
-					<button id="transaction-add-btn">Add</button>
+					<h2>Transactions <button id="transaction-add-btn">Add</button></h2>
 					<table>
 						<thead>
 							<tr>
 								<th scope="col">Date</th>
 								<th scope="col">Flag</th>
 								<th scope="col">Payee</th>
-								<th scope="col">Narration</th>
-								<th scope="col">Tags</th>
-								<th scope="col">Links</th>
-								<th scope="col">Amount</th>
+								<th scope="col">Notes</th>
+								<!-- <th scope="col">Amount</th> -->
 							</tr>
 						</thead>
 						<tbody id="transaction-list"></tbody>
@@ -91,15 +95,86 @@
 			<fieldset>
 				<label>
 					Username
-					<input name="username" placeholder="Username" required>
+					<input id="login-username" name="login-username" placeholder="Username" required>
 				</label>
 				<label>
 					Password
-					<input type="password" name="password" placeholder="Password" required>
+					<input id="login-password" type="password" name="login-password" placeholder="Password" required>
 				</label>
 			</fieldset>
-			<input type="submit" value="Login">
+			<input id="login-submit" type="submit" value="Login">
 		</form>
+
+		<dialog id="account-modal">
+			<article>
+				<header>
+					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="account-modal"></button>
+					<h2 id="account-title">Account</h2>
+				</header>
+				<form id="account-form">
+					<input type="hidden" id="account-id" name="account-id" value="">
+					<input type="hidden" id="account-delete" name="account-delete" value="">
+					<textarea id="account-error" class="hide" name="account-error" aria-invalid="true" readonly></textarea>
+					<fieldset role="group">
+						<input
+							type="text"
+							id="account-name"
+							name="account-payee"
+							placeholder="Account:Name"
+							aria-label="Account Name"
+							required>
+						<select
+							id="account-currency"
+							name="account-currency"
+							class="currency-select"
+							required></select>
+					</fieldset>
+				</form>
+				<footer>
+					<button id="account-open-delete-btn" class="float-left secondary">Delete</button>
+					<button id="account-delete-btn" class="float-left danger hide">Delete?</button>
+					<button class="toggle-modal secondary" data-target="account-modal">Cancel</button>
+					<button id="account-submit" data-target="account-modal" form="account-form">Submit</button>
+				</footer>
+			</article>
+		</dialog>
+
+		<dialog id="currency-modal">
+			<article>
+				<header>
+					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="currency-modal"></button>
+					<h2 id="currency-title">Currency</h2>
+				</header>
+				<form id="currency-form">
+					<input type="hidden" id="currency-id" name="currency-id" value="">
+					<input type="hidden" id="currency-delete" name="currency-delete" value="">
+					<textarea id="currency-error" class="hide" name="currency-error" aria-invalid="true" readonly></textarea>
+					<fieldset class="flex align-center gap-md">
+						<input
+							type="text"
+							id="currency-name"
+							name="currency-name"
+							placeholder="Currency"
+							aria-label="Currency"
+							required>
+						<label>
+							<input
+								id="currency-default"
+								name="currency-default"
+								type="checkbox"
+								role="switch">
+							Default
+						</label>
+					</fieldset>
+				</form>
+				<footer>
+					<button id="currency-open-delete-btn" class="float-left secondary">Delete</button>
+					<button id="currency-delete-btn" class="float-left danger hide">Delete?</button>
+					<button class="toggle-modal secondary" data-target="currency-modal">Cancel</button>
+					<button id="currency-submit" data-target="currency-modal" form="currency-form">Submit</button>
+				</footer>
+			</article>
+		</dialog>
 
 		<dialog id="transaction-modal">
 			<article>
@@ -111,7 +186,7 @@
 					<input type="hidden" id="transaction-id" name="transaction-id" value="">
 					<input type="hidden" id="transaction-delete" name="transaction-delete" value="">
 					<textarea id="transaction-error" class="hide" name="transaction-error" aria-invalid="true" readonly></textarea>
-					<fieldset>
+					<fieldset role="group">
 						<input
 							type="date"
 							id="transaction-date"
@@ -123,38 +198,31 @@
 								id="transaction-flag"
 								name="transaction-flag"
 								type="checkbox"
-								role="switch">Cleared</label>
+								role="switch"></label>
 						<input
 							type="text"
 							id="transaction-payee"
 							name="transaction-payee"
 							list="payee-datalist"
 							placeholder="Payee"
-							aria-label="Payee">
+							aria-label="Payee"
+							required>
 						<input
 							type="text"
-							id="transaction-narration"
-							name="transaction-narration"
-							placeholder="Narration"
-							aria-label="Narration">
-						<input
-							type="text"
-							id="transaction-tags"
-							name="transaction-tags"
-							list="tags-datalist"
-							placeholder="Tags"
-							aria-label="Tags">
-						<input
-							type="text"
-							id="transaction-links"
-							name="transaction-links"
-							list="links-datalist"
-							placeholder="Links"
-							aria-label="Links">
+							id="transaction-notes"
+							name="transaction-notes"
+							placeholder="Notes"
+							aria-label="Notes">
 						<hr>
 					</fieldset>
 					<fieldset>
-						<div role="group" class="transaction-posting transaction-posting-0">
+						<div role="group" class="transaction-posting transaction-posting-0 pl-btn">
+							<input
+								type="hidden"
+								class="transaction-posting-id">
+							<input
+								type="hidden"
+								class="transaction-posting-account-id">
 							<input
 								type="text"
 								class="transaction-posting-account"
@@ -168,8 +236,18 @@
 								placeholder="Amount"
 								aria-label="Amount"
 								required>
+							<select
+								class="transaction-posting-currency currency-select"
+								aria-label="Currency"
+								required></select>
 						</div>
-						<div role="group" class="transaction-posting transaction-posting-1">
+						<div role="group" class="transaction-posting transaction-posting-1 pl-btn">
+							<input
+								type="hidden"
+								class="transaction-posting-id">
+							<input
+								type="hidden"
+								class="transaction-posting-account-id">
 							<input
 								type="text"
 								class="transaction-posting-account"
@@ -183,10 +261,14 @@
 								placeholder="Amount"
 								aria-label="Amount"
 								required>
+							<select
+								class="transaction-posting-currency currency-select"
+								aria-label="Currency"
+								required></select>
 						</div>
 						<div id="transaction-postings"></div>
-						<button id="transaction-add-posting-btn">Add Split</button>
 					</fieldset>
+					<input type="button" id="transaction-add-posting-btn" value="Add Split">
 				</form>
 				<footer>
 					<button id="transaction-open-delete-btn" class="float-left secondary">Delete</button>
@@ -198,8 +280,6 @@
 		</dialog>
 
 		<datalist id="payee-datalist"></datalist>
-		<datalist id="tags-datalist"></datalist>
-		<datalist id="links-datalist"></datalist>
 		<datalist id="account-datalist"></datalist>
 	</body>
 </html>

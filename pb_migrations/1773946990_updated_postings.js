@@ -1,0 +1,28 @@
+/// <reference path="../pb_data/types.d.ts" />
+migrate((app) => {
+  const collection = app.findCollectionByNameOrId("pbc_2465304777")
+
+  // add field
+  collection.fields.addAt(5, new Field({
+    "cascadeDelete": false,
+    "collectionId": "pbc_3379852803",
+    "hidden": false,
+    "id": "relation1767278655",
+    "maxSelect": 1,
+    "minSelect": 0,
+    "name": "currency",
+    "presentable": false,
+    "required": false,
+    "system": false,
+    "type": "relation"
+  }))
+
+  return app.save(collection)
+}, (app) => {
+  const collection = app.findCollectionByNameOrId("pbc_2465304777")
+
+  // remove field
+  collection.fields.removeById("relation1767278655")
+
+  return app.save(collection)
+})
