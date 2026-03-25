@@ -101,9 +101,7 @@ const DOM = {
 	transactionDate: document.getElementById('transaction-date'),
 	transactionFlag: document.getElementById('transaction-flag'),
 	transactionPayee: document.getElementById('transaction-payee'),
-	// transactionNarration: document.getElementById('transaction-narration'),
 	transactionNotes: document.getElementById('transaction-notes'),
-	// transactionLinks: document.getElementById('transaction-links'),
 	transactionAddPostingBtn: document.getElementById('transaction-add-posting-btn'),
 	transactionPostings: document.getElementById('transaction-postings'),
 	transactionOpenDeleteBtn: document.getElementById('transaction-open-delete-btn'),
@@ -392,35 +390,6 @@ function toggleTransactionDelete(e) {
 	DOM.transactionDeleteBtn.classList.contains('hide') ?
 		DOM.transactionOpenDeleteBtn.textContent = 'Delete' : DOM.transactionOpenDeleteBtn.textContent = 'Cancel';
 }
-
-// function parseTransactions(records) {
-// 	const txns = [];
-// 	const payees = [];
-// 	const tags = [];
-// 	const links = [];
-// 	const accounts = [];
-// 	records.forEach((txn) => {
-// 		txn.amount = 0;
-// 		txn.tags.split(" ").forEach((tag) => {
-// 			if (!tags.includes(tag)) tags.push(tag);
-// 		});
-// 		txn.links.split(" ").forEach((link) => {
-// 			if (!links.includes(link)) links.push(link);
-// 		});
-// 		txn.postings.forEach((posting) => {
-// 			if (!accounts.includes(posting.account)) accounts.push(posting.account);
-// 			const amount = dec(posting.amount.split(" ")[0]);
-// 			if (amount > 0) txn.amount += amount;
-// 		});
-// 		txns.push(txn);
-// 	});
-// 	payees.sort();
-// 	tags.sort();
-// 	links.sort();
-// 	accounts.sort();
-//
-// 	return {txns, payees, tags, links, accounts};
-// }
 
 async function renderAccounts() {
 	const records = await pb.collection('accounts').getFullList({
