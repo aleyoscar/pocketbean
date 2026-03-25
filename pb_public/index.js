@@ -851,7 +851,10 @@ function attachListeners() {
 
 	DOM.transactionList.addEventListener('click', (e) => {
 		const editBtn = e.target.closest('.transaction-edit-btn');
-		if (editBtn) openTargetTransactionForm(editBtn);
+		if (editBtn) {
+			openTargetTransactionForm(editBtn);
+			return;
+		}
 
 		const row = e.target.closest('.transaction-row');
 		if (row) togglePostings(row);
