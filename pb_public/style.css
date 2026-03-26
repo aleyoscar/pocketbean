@@ -35,6 +35,8 @@ Column  576    356    220    136   84     52     32
 .gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
 .grid-xxs { grid-template-columns: 220px 1fr; }
 .hide { display: none; }
+.justify-center { justify-content: center; }
+.mb-0 { margin-bottom: 0px; }
 .pl-btn { padding-left: calc(66.2px - var(--pico-border-width)); }
 .pointer { cursor: pointer; }
 .row-background,

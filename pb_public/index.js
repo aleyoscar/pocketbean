@@ -110,6 +110,12 @@ const DOM = {
 	transactionDeleteBtn: document.getElementById('transaction-delete-btn'),
 	transactionSubmitBtn: document.getElementById('transaction-submit-btn'),
 
+	transactionPagination: document.getElementById('transaction-pagination'),
+	transactionPagePrev: document.getElementById('transaction-page-prev'),
+	transactionPageCurrent: document.getElementById('transaction-page-current'),
+	transactionPageTotal: document.getElementById('transaction-page-total'),
+	transactionPageNext: document.getElementById('transaction-page-next'),
+
 	loginForm: document.getElementById('login-form'),
 	loginError: document.getElementById('login-error'),
 	loginUsername: document.getElementById('login-username'),
@@ -125,6 +131,15 @@ const DOM = {
 // ===================== CONSTANTS =====================
 
 const pb = new PocketBase("/");
+
+const SETTINGS = {
+	perPage: 30,
+}
+
+const STATE = {
+	transactionPage: 1,
+	transactionTotalPages: 1,
+}
 
 // ===================== MODAL =====================
 
@@ -443,17 +458,29 @@ async function renderPostings() {
 
 }
 
-async function renderTransactions() {
-	const records = await pb.collection('transactions').getFullList({
+async function updateTransactionPage(e) {
+	let newPage = 1;
+	if (e.target.dataset.step) newPage = STATE.transactionPage + parseInt(e.target.dataset.step);
+	if (e.target.dataset.jump) newPage = parseInt(e.target.dataset.jump);
+	if (newPage > STATE.transactionTotalPages || newPage < 1) return;
+	await renderTransactions(newPage);
+}
+
+async function renderTransactions(page=1) {
+	const records = await pb.collection('transactions').getList(page, SETTINGS.perPage, {
 		sort: '-date,created',
 		expand: 'postings_via_transaction,postings_via_transaction.account,postings_via_transaction.currency',
 	});
 
-	DOM.transactionList.innerHTML = '';
-	const payees = new Set();
-	const tags = new Set();
+	STATE.transactionPage = records.page;
+	STATE.transactionTotalPages = records.totalPages;
+	DOM.transactionPageCurrent.textContent = records.page;
+	DOM.transactionPageTotal.textContent = records.totalPages;
+	DOM.transactionPagePrev.disabled = page === 1;
+	DOM.transactionPageNext.disabled = page === records.totalPages;
 
-	for (const txn of records) {
+	DOM.transactionList.innerHTML = '';
+	for (const txn of records.items) {
 		let txnAmount = 0;
 		const postings = txn.expand.postings_via_transaction;
 		const postingRows = [];
@@ -497,6 +524,20 @@ async function renderTransactions() {
 			]
 		}));
 		postingRows.forEach(row => DOM.transactionList.append(row));
+	}
+}
+
+async function renderDatalists() {
+	const records = await pb.collection('transactions').getFullList({
+		sort: '-date,created',
+		expand: 'postings_via_transaction,postings_via_transaction.account,postings_via_transaction.currency',
+	});
+
+	const payees = new Set();
+	const tags = new Set();
+
+	for (const txn of records) {
+
 		if (txn.payee) payees.add(txn.payee);
 		if (txn.tags.trim()) {
 			txn.tags.trim().split(' ').forEach(tag => {
@@ -520,6 +561,7 @@ async function renderAll() {
 	await renderCurrencies();
 	await renderAccounts();
 	await renderTransactions();
+	await renderDatalists();
 	await updateCurrencySelects();
 }
 
@@ -732,6 +774,7 @@ async function submitTransaction(e) {
 		}
 
 		await renderTransactions();
+		await renderDatalists();
 		closeModal(DOM.transactionModal);
 
 	} catch (err) {
@@ -848,6 +891,9 @@ function attachListeners() {
 	DOM.logout.addEventListener('click', logout);
 	DOM.toggleModals.forEach((m) => m.addEventListener('click', toggleModal));
 	DOM.transactionAddPostingBtn.addEventListener('click', addPosting);
+
+	DOM.transactionPagePrev.addEventListener('click', updateTransactionPage);
+	DOM.transactionPageNext.addEventListener('click', updateTransactionPage);
 
 	DOM.transactionForm.querySelectorAll('.transaction-posting-account').forEach(input =>
 		input.addEventListener('input', syncAccountId)
