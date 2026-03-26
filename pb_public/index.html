@@ -79,7 +79,8 @@
 								<th scope="col" class="col-width-md">Date</th>
 								<th scope="col" class="col-width-sm">Flag</th>
 								<th scope="col" class="col-width-lg">Payee</th>
-								<th scope="col">Notes</th>
+								<th scope="col" class="col-width-xl">Notes</th>
+								<th scope="col">Tags</th>
 								<th scope="col" class="text-right">Amount</th>
 								<th scope="col" class="col-width-sm"></th>
 							</tr>
@@ -214,6 +215,15 @@
 							name="transaction-notes"
 							placeholder="Notes"
 							aria-label="Notes">
+					</fieldset>
+					<fieldset>
+						<input
+							type="text"
+							id="transaction-tags"
+							name="transaction-tags"
+							list="tag-datalist"
+							placeholder="Tags"
+							aria-label="Tags">
 						<hr>
 					</fieldset>
 					<fieldset>
@@ -282,5 +292,6 @@
 
 		<datalist id="payee-datalist"></datalist>
 		<datalist id="account-datalist"></datalist>
+		<datalist id="tag-datalist"></datalist>
 	</body>
 </html>

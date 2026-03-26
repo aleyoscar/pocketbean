@@ -23,6 +23,7 @@ Column  576    356    220    136   84     52     32
 }
 
 .align-center { align-items: center; }
+.col-width-xl { width: 356px; }
 .col-width-lg { width: 220px; }
 .col-width-md { width: 136px; }
 .col-width-sm { width: 84px; }

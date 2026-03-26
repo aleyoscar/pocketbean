@@ -56,7 +56,8 @@ const DOM = {
 
 	accountDatalist: document.getElementById('account-datalist'),
 	payeeDatalist: document.getElementById('payee-datalist'),
-	linksDatalist: document.getElementById('links-datalist'),
+	tagDatalist: document.getElementById('tag-datalist'),
+
 
 	accounts: document.getElementById('accounts'),
 	currencies: document.getElementById('currencies'),
@@ -102,6 +103,7 @@ const DOM = {
 	transactionFlag: document.getElementById('transaction-flag'),
 	transactionPayee: document.getElementById('transaction-payee'),
 	transactionNotes: document.getElementById('transaction-notes'),
+	transactionTags: document.getElementById('transaction-tags'),
 	transactionAddPostingBtn: document.getElementById('transaction-add-posting-btn'),
 	transactionPostings: document.getElementById('transaction-postings'),
 	transactionOpenDeleteBtn: document.getElementById('transaction-open-delete-btn'),
@@ -370,7 +372,7 @@ function openTargetTransactionForm(target) {
 	DOM.transactionFlag.checked = false;
 	DOM.transactionPayee.value = '';
 	DOM.transactionNotes.value = '';
-	// DOM.transactionLinks.value = '';
+	DOM.transactionTags.value = '';
 	DOM.transactionPostings.innerHTML = '';
 	if (target.dataset.id) {
 		DOM.transactionId.value = target.dataset.id;
@@ -449,6 +451,7 @@ async function renderTransactions() {
 
 	DOM.transactionList.innerHTML = '';
 	const payees = new Set();
+	const tags = new Set();
 
 	for (const txn of records) {
 		let txnAmount = 0;
@@ -461,6 +464,7 @@ async function renderTransactions() {
 				class: `transaction-posting-row pointer row-background hide`,
 				dataset: { transaction: txn.id },
 				children: [
+					createElement('td'),
 					createElement('td'),
 					createElement('td'),
 					createElement('td'),
@@ -478,6 +482,7 @@ async function renderTransactions() {
 				createElement('td', { textContent: txn.flag ? '*' : '!' }),
 				createElement('td', { textContent: txn.payee }),
 				createElement('td', { textContent: txn.notes || '' }),
+				createElement('td', { textContent: txn.tags.trim() || '' }),
 				createElement('td', { textContent: cur(txnAmount), class: 'text-right' }),
 				createElement('td', {
 					class: 'text-right',
@@ -493,12 +498,21 @@ async function renderTransactions() {
 		}));
 		postingRows.forEach(row => DOM.transactionList.append(row));
 		if (txn.payee) payees.add(txn.payee);
+		if (txn.tags.trim()) {
+			txn.tags.trim().split(' ').forEach(tag => {
+				tags.add(tag);
+			});
+		}
 	}
 
-	// Populate payee datalist
 	DOM.payeeDatalist.innerHTML = '';
 	[...payees].sort().forEach(payee => {
 		DOM.payeeDatalist.append(createElement('option', { value: payee }));
+	});
+
+	DOM.tagDatalist.innerHTML = '';
+	[...tags].sort().forEach(tag => {
+		DOM.tagDatalist.append(createElement('option', { value: tag }));
 	});
 }
 
@@ -702,6 +716,7 @@ async function submitTransaction(e) {
 				flag: DOM.transactionFlag.checked,
 				payee: DOM.transactionPayee.value.trim(),
 				notes: DOM.transactionNotes.value.trim(),
+				tags: ` ${DOM.transactionTags.value.trim()} `,
 			};
 
 			let transaction;
@@ -782,6 +797,7 @@ async function editTransaction(id) {
 		DOM.transactionFlag.checked = record.flag || false;
 		DOM.transactionPayee.value = record.payee || '';
 		DOM.transactionNotes.value = record.notes || '';
+		DOM.transactionTags.value = record.tags.trim() || '';
 
 		// Clear previous postings
 		DOM.transactionPostings.innerHTML = '';
