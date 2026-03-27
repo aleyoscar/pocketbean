@@ -265,8 +265,8 @@ async function renderAll() {
 	await renderAccounts();
 	await renderTransactions();
 	await renderDatalists();
-	await updateCurrencySelects();
 	await renderReports();
+	await updateCurrencySelects();
 }
 
 async function addPosting(e) {

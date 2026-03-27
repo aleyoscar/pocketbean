@@ -123,8 +123,7 @@ async function submitTransaction(e) {
 			await createPostings(transaction.id);
 		}
 
-		await renderTransactions();
-		await renderDatalists();
+		await renderAll();
 		closeModal(DOM.transactionModal);
 
 	} catch (err) {
