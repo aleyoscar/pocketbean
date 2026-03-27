@@ -12,6 +12,7 @@ function renderAccountTree(posting, container, level=0) {
 	} else {
 		node = createElement('details', {
 			id: nodeId,
+			class: 'details-left',
 			attributes: { open: 'open' },
 			children: [
 				createElement('summary', {

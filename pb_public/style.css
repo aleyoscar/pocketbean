@@ -70,16 +70,16 @@ button.danger:hover {
 ul.no-decoration { padding-left: 0; }
 ul.no-decoration li { list-style: none; }
 
-details > summary::after {
+details.details-left > summary::after {
 	content: none !important;
 }
 
-details > summary {
+details.details-left > summary {
 	display: flex;
 	align-items: center;
 }
 
-details > summary::before {
+details.details-left > summary::before {
 	content: var(--pico-icon-chevron);
 	display: inline-block;
 	margin-right: 0.4rem;
@@ -88,6 +88,6 @@ details > summary::before {
 	transform-origin: center;
 }
 
-details[open] > summary::before {
+details.details-left[open] > summary::before {
 	transform: scale(0.75) rotate(0deg);
 }
