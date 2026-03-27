@@ -59,6 +59,12 @@ function createElement(tag, options = {}) {
 		});
 	}
 
+	if (options.style) {
+		Object.entries(options.style).forEach(([key, value]) => {
+			el.style[key] = value;
+		});
+	}
+
 	if (options.attributes) {
 		Object.entries(options.attributes).forEach(([key, value]) => {
 			el.setAttribute(key, value);

@@ -1,8 +1,8 @@
 /*
+        xxl    xl     lg     md    sm     xs     xxs
 Widths  1536   1280   1024   768   576    356    220
 Padding 4.2rem 2.6rem 1.6rem 1rem  0.6rem 0.4rem 0.2rem
 Column  576    356    220    136   84     52     32
-        xxl    xl     lg     md    sm     xs     xxs
 */
 
 :root, :host {
@@ -20,6 +20,7 @@ Column  576    356    220    136   84     52     32
 	--pico-border-width: 0.0625rem;
 
 	/* --pico-heading-font-weight: 600; */
+	--width-sm: 576px;
 }
 
 .align-center { align-items: center; }
@@ -35,10 +36,15 @@ Column  576    356    220    136   84     52     32
 .gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
 .grid-xxs { grid-template-columns: 220px 1fr; }
 .hide { display: none; }
+.inline-block { display: inline-block; }
 .justify-center { justify-content: center; }
+.max-width-sm { max-width: var(--width-sm); }
 .mb-0 { margin-bottom: 0px; }
+.ml-auto { margin-left: auto; }
+.neg { color: var(--pico-del-color); }
 .pl-btn { padding-left: calc(66.2px - var(--pico-border-width)); }
 .pointer { cursor: pointer; }
+.pos { color: var(--pico-ins-color); }
 .row-background,
 .row-background th,
 .row-background td,
@@ -63,3 +69,25 @@ button.danger:hover {
 
 ul.no-decoration { padding-left: 0; }
 ul.no-decoration li { list-style: none; }
+
+details > summary::after {
+	content: none !important;
+}
+
+details > summary {
+	display: flex;
+	align-items: center;
+}
+
+details > summary::before {
+	content: var(--pico-icon-chevron);
+	display: inline-block;
+	margin-right: 0.4rem;
+	transition: transform .2s ease;
+	transform: scale(0.75) rotate(-90deg);
+	transform-origin: center;
+}
+
+details[open] > summary::before {
+	transform: scale(0.75) rotate(0deg);
+}

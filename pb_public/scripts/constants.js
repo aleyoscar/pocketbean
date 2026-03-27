@@ -80,6 +80,8 @@ const DOM = {
 	sections: document.querySelectorAll('main section'),
 	toggleModals: document.querySelectorAll('.toggle-modal'),
 	wrapper: document.getElementById('wrapper'),
+
+	balancesContainer: document.getElementById('balances-container'),
 }
 
 const SETTINGS = {

@@ -254,12 +254,17 @@ async function renderDatalists() {
 	});
 }
 
+async function renderReports() {
+	await renderBalances();
+}
+
 async function renderAll() {
 	await renderCurrencies();
 	await renderAccounts();
 	await renderTransactions();
 	await renderDatalists();
 	await updateCurrencySelects();
+	await renderReports();
 }
 
 async function addPosting(e) {
