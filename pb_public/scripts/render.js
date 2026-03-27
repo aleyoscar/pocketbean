@@ -147,7 +147,7 @@ async function renderCurrencies() {
 			dataset: { id: curr.id },
 			children: [
 				createElement('th', { attributes: { scope: 'row' }, textContent: curr.name }),
-				createElement('td', { textContent: curr.default ? 'Default' : '' }),
+				createElement('td', { textContent: curr.default ? 'Default' : '', class: 'text-right' }),
 			],
 		}));
 	});
