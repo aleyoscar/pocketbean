@@ -43,12 +43,12 @@ async function submitAccount(e) {
 				"user": pb.authStore.record.id,
 				"name": DOM.accountName.value.trim(),
 				"currency": DOM.accountCurrency.value,
+				"track": DOM.accountTrack.checked,
 			};
 			if (id) record = await pb.collection('accounts').update(id, data);
 			else record = await pb.collection('accounts').create(data);
 		}
-		await renderAccounts();
-		await updateCurrencySelects();
+		await renderAll();
 		closeModal(DOM.accountModal);
 	} catch (err) {
 		setError(DOM.accountError, err);
@@ -156,6 +156,7 @@ async function editAccount(id) {
 		DOM.accountId.value = record.id;
 		DOM.accountName.value = record.name;
 		selectOption(DOM.accountCurrency, record.expand.currency.id);
+		DOM.accountTrack.checked = record.track;
 		DOM.accountOpenDeleteBtn.classList.remove('hide');
 	} catch (err) {
 		setError(DOM.accountError, err);

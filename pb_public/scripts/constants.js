@@ -16,6 +16,7 @@ const DOM = {
 	accounts: document.getElementById('accounts'),
 	currencies: document.getElementById('currencies'),
 	transactions: document.getElementById('transactions'),
+	balances: document.getElementById('balances'),
 
 	accountAddBtn: document.getElementById('account-add-btn'),
 	currencyAddBtn: document.getElementById('currency-add-btn'),
@@ -35,6 +36,7 @@ const DOM = {
 	accountDelete: document.getElementById('account-delete'),
 	accountName: document.getElementById('account-name'),
 	accountCurrency: document.getElementById('account-currency'),
+	accountTrack: document.getElementById('account-track'),
 	accountOpenDeleteBtn: document.getElementById('account-open-delete-btn'),
 	accountDeleteBtn: document.getElementById('account-delete-btn'),
 	accountSubmitBtn: document.getElementById('account-submit-btn'),
@@ -81,7 +83,8 @@ const DOM = {
 	toggleModals: document.querySelectorAll('.toggle-modal'),
 	wrapper: document.getElementById('wrapper'),
 
-	balancesContainer: document.getElementById('balances-container'),
+	balancesTree: document.getElementById('balances-tree'),
+	balancesList: document.getElementById('balances-list'),
 }
 
 const SETTINGS = {

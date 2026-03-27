@@ -38,11 +38,27 @@ async function renderBalances() {
 			expand: "account,account.currency",
 		});
 
-		postings.forEach(posting => {
-			renderAccountTree(posting, DOM.balancesContainer);
+		const accounts = await pb.collection('accounts').getFullList({
+			sort: "name",
 		});
 
-		DOM.balancesContainer.querySelectorAll('.balances-amount').forEach(bal => {
+		postings.forEach(posting => {
+			renderAccountTree(posting, DOM.balancesTree);
+		});
+
+		DOM.balancesList.innerHTML = '';
+		accounts.forEach(acct => {
+			if (acct.track) {
+				const acctId = `balances-${acct.name.toLowerCase().replaceAll(':', '-')}`;
+				const acctNode = document.getElementById(acctId);
+				DOM.balancesList.appendChild(createElement('h5', {
+					class: 'flex space-between',
+					innerHTML: acctNode.querySelector('summary').innerHTML,
+				}));
+			}
+		});
+
+		DOM.balances.querySelectorAll('.balances-amount').forEach(bal => {
 			bal.classList.toggle('neg', dec(bal.textContent) < 0);
 			bal.classList.toggle('pos', dec(bal.textContent) > 0);
 		});

@@ -61,6 +61,7 @@
 							<tr>
 								<th scope="col">Account</th>
 								<th scope="col">Currency</th>
+								<th scope="col" class="text-right">Track</th>
 							</tr>
 						</thead>
 						<tbody id="account-list"></tbody>
@@ -104,9 +105,15 @@
 						<button id="transaction-page-next" data-step="1">&gt;</button>
 					</div>
 				</section>
-				<section id="balances" class="hide">
-					<h3>Balances</h3>
-					<div id="balances-container" class="chart-container max-width-sm"></div>
+				<section id="balances" class="grid hide">
+					<div>
+						<h3>Tracked Accounts</h3>
+						<div id="balances-list"></div>
+					</div>
+					<div>
+						<h3>Balances</h3>
+						<div id="balances-tree"></div>
+					</div>
 				</section>
 			</main>
 			<footer></footer>
@@ -137,7 +144,7 @@
 					<input type="hidden" id="account-id" name="account-id" value="">
 					<input type="hidden" id="account-delete" name="account-delete" value="">
 					<textarea id="account-error" class="hide" name="account-error" aria-invalid="true" readonly></textarea>
-					<fieldset role="group">
+					<fieldset>
 						<input
 							type="text"
 							id="account-name"
@@ -150,6 +157,14 @@
 							name="account-currency"
 							class="currency-select"
 							required></select>
+						<label>
+							<input
+								id="account-track"
+								name="account-track"
+								type="checkbox"
+								role="switch">
+							Track
+						</label>
 					</fieldset>
 				</form>
 				<footer>

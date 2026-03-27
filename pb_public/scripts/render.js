@@ -43,6 +43,7 @@ function openTargetAccountForm(target) {
 	DOM.accountDeleteBtn.classList.add('hide');
 	DOM.accountName.value = '';
 	setTimeout(() => DOM.accountName.focus(), 100);
+	DOM.accountTrack.checked = false;
 	// selectOption(DOM.accountCurrency);
 	if (target.dataset.id) {
 		DOM.accountId.value = target.dataset.id;
@@ -125,6 +126,7 @@ async function renderAccounts() {
 			children: [
 				createElement('th', { attributes: { scope: 'row' }, textContent: acct.name }),
 				createElement('td', { textContent: acct.expand.currency.name }),
+				createElement('td', { textContent: acct.track ? 'Tracked' : '', class: 'text-right' }),
 			],
 		}));
 		DOM.accountDatalist.append(createElement('option', {
