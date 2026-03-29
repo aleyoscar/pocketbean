@@ -7,7 +7,7 @@ function togglePostings(target) {
 function toggleAuth() {
 	const isLoggedIn = !!pb.authStore.record;
 	DOM.wrapper.classList.toggle('hide', !isLoggedIn);
-	DOM.loginForm.classList.toggle('hide', isLoggedIn);
+	DOM.loginContainer.classList.toggle('hide', isLoggedIn);
 	DOM.account.textContent = isLoggedIn ? pb.authStore.record.username : '';
 	return isLoggedIn;
 }

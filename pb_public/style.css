@@ -21,6 +21,7 @@ Column  576    356    220    136   84     52     32
 
 	/* --pico-heading-font-weight: 600; */
 	--width-sm: 576px;
+	--padding-xxl: 4.2rem;
 }
 
 .align-center { align-items: center; }
@@ -41,6 +42,8 @@ Column  576    356    220    136   84     52     32
 .max-width-sm { max-width: var(--width-sm); }
 .mb-0 { margin-bottom: 0px; }
 .ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+.mt-xxl { margin-top: var(--padding-xxl); }
 .neg { color: var(--pico-del-color); }
 .pl-btn { padding-left: calc(66.2px - var(--pico-border-width)); }
 .pointer { cursor: pointer; }

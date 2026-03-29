@@ -89,6 +89,7 @@ const DOM = {
 	transactionPageTotal: document.getElementById('transaction-page-total'),
 	transactionPageNext: document.getElementById('transaction-page-next'),
 
+	loginContainer: document.getElementById('login-container'),
 	loginForm: document.getElementById('login-form'),
 	loginError: document.getElementById('login-error'),
 	loginUsername: document.getElementById('login-username'),

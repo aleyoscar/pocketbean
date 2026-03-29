@@ -143,20 +143,23 @@
 			<footer></footer>
 		</div>
 
-		<form id="login-form" class="container">
-			<textarea id="login-error" class="hide" name="login-error" aria-invalid="true" readonly></textarea>
-			<fieldset>
-				<label>
-					Username
-					<input id="login-username" name="login-username" placeholder="Username" required>
-				</label>
-				<label>
-					Password
-					<input id="login-password" type="password" name="login-password" placeholder="Password" required>
-				</label>
-			</fieldset>
-			<input id="login-submit" type="submit" value="Login">
-		</form>
+		<article id="login-container" class="max-width-sm ml-auto mr-auto mt-xxl">
+			<h3>Login</h3>
+			<form id="login-form">
+				<textarea id="login-error" class="hide" name="login-error" aria-invalid="true" readonly></textarea>
+				<fieldset>
+					<label>
+						Username
+						<input id="login-username" name="login-username" placeholder="Username" required>
+					</label>
+					<label>
+						Password
+						<input id="login-password" type="password" name="login-password" placeholder="Password" required>
+					</label>
+				</fieldset>
+				<input id="login-submit" type="submit" value="Login">
+			</form>
+		</article>
 
 		<dialog id="account-modal">
 			<article>
@@ -380,10 +383,11 @@
 								aria-label="Account"
 								required>
 							<input
-								type="text"
+								type="number"
 								class="transaction-posting-amount"
 								placeholder="Amount"
 								aria-label="Amount"
+								step="0.01"
 								required>
 							<select
 								class="transaction-posting-currency currency-select"
