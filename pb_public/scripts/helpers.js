@@ -105,10 +105,10 @@ function createPosting() {
 				required: true
 			}),
 			createElement('input', {
-				type: 'text',
+				type: 'number',
 				class: 'transaction-posting-amount',
 				placeholder: 'Amount',
-				attributes: { 'aria-label': 'Amount' },
+				attributes: { 'aria-label': 'Amount', step: '0.01' },
 				required: true
 			}),
 			createElement('select', {
