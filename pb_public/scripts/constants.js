@@ -5,6 +5,7 @@ const DOM = {
 	account: document.getElementById('account'),
 
 	accountList: document.getElementById('account-list'),
+	billList: document.getElementById('bill-list'),
 	currencyList: document.getElementById('currency-list'),
 	transactionList: document.getElementById('transaction-list'),
 
@@ -12,21 +13,24 @@ const DOM = {
 	payeeDatalist: document.getElementById('payee-datalist'),
 	tagDatalist: document.getElementById('tag-datalist'),
 
-
 	accounts: document.getElementById('accounts'),
+	bills: document.getElementById('bills'),
 	currencies: document.getElementById('currencies'),
 	transactions: document.getElementById('transactions'),
 	balances: document.getElementById('balances'),
 
 	accountAddBtn: document.getElementById('account-add-btn'),
+	billAddBtn: document.getElementById('bill-add-btn'),
 	currencyAddBtn: document.getElementById('currency-add-btn'),
 	transactionAddBtn: document.getElementById('transaction-add-btn'),
 
 	accountModal: document.getElementById('account-modal'),
+	billModal: document.getElementById('bill-modal'),
 	currencyModal: document.getElementById('currency-modal'),
 	transactionModal: document.getElementById('transaction-modal'),
 
 	accountForm: document.getElementById('account-form'),
+	billForm: document.getElementById('bill-form'),
 	currencyForm: document.getElementById('currency-form'),
 	transactionForm: document.getElementById('transaction-form'),
 
@@ -40,6 +44,19 @@ const DOM = {
 	accountOpenDeleteBtn: document.getElementById('account-open-delete-btn'),
 	accountDeleteBtn: document.getElementById('account-delete-btn'),
 	accountSubmitBtn: document.getElementById('account-submit-btn'),
+
+	billTitle: document.getElementById('bill-title'),
+	billError: document.getElementById('bill-error'),
+	billId: document.getElementById('bill-id'),
+	billDelete: document.getElementById('bill-delete'),
+	billDate: document.getElementById('bill-date'),
+	billAccount: document.getElementById('bill-account'),
+	billAccountId: document.getElementById('bill-account-id'),
+	billAmount: document.getElementById('bill-amount'),
+	billTransaction: document.getElementById('bill-transaction'),
+	billOpenDeleteBtn: document.getElementById('bill-open-delete-btn'),
+	billDeleteBtn: document.getElementById('bill-delete-btn'),
+	billSubmitBtn: document.getElementById('bill-submit-btn'),
 
 	currencyTitle: document.getElementById('currency-title'),
 	currencyError: document.getElementById('currency-error'),

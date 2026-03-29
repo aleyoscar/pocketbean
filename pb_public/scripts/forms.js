@@ -8,6 +8,17 @@ function syncAccountId(e) {
 	accountId.value = (option && option.dataset.id) ? option.dataset.id : '';
 }
 
+function syncBillAccountId(e) {
+	const option = Array.from(DOM.accountDatalist.options)
+		.find(opt => opt.value === DOM.billAccount.value.trim());
+	if (option && option.dataset.id) {
+		DOM.billAccountId.value = option.dataset.id;
+		setBillTransactionSelect(option.dataset.id, '');
+	} else {
+		DOM.billAccountId.value = '';
+	}
+}
+
 async function createPostings(transactionId) {
 	const newPostings = [];
 	DOM.transactionForm.querySelectorAll('.transaction-posting').forEach((row, index) => {
@@ -52,6 +63,33 @@ async function submitAccount(e) {
 		closeModal(DOM.accountModal);
 	} catch (err) {
 		setError(DOM.accountError, err);
+	}
+}
+
+async function submitBill(e) {
+	e.preventDefault();
+	setError(DOM.billError);
+	try {
+		const id = DOM.billId.value;
+		const del = DOM.billDelete.value;
+		let record;
+		if (del && id) {
+			await pb.collection('bills').delete(id);
+		} else {
+			const data = {
+				user: pb.authStore.record.id,
+				date: localToUtc(DOM.billDate.value.trim()),
+				account: DOM.billAccountId.value.trim(),
+				amount: dec(DOM.billAmount.value),
+				transaction: !DOM.billTransaction.value || DOM.billTransaction.value === '--' ? '' : DOM.billTransaction.value,
+			};
+			if (id) record = await pb.collection('bills').update(id, data);
+			else record = await pb.collection('bills').create(data);
+		}
+		await renderAll();
+		closeModal(DOM.billModal);
+	} catch (err) {
+		setError(DOM.billError, err);
 	}
 }
 
@@ -136,6 +174,11 @@ async function deleteAccount(e) {
 	submitAccount(e);
 }
 
+async function deleteBill(e) {
+	DOM.billDelete.value = 'delete';
+	submitBill(e);
+}
+
 async function deleteCurrency(e) {
 	DOM.currencyDelete.value = 'delete';
 	submitCurrency(e);
@@ -159,6 +202,58 @@ async function editAccount(id) {
 		DOM.accountOpenDeleteBtn.classList.remove('hide');
 	} catch (err) {
 		setError(DOM.accountError, err);
+	}
+}
+
+async function setBillTransactionSelect(accountId, transactionId) {
+	try {
+		DOM.billTransaction.innerHTML = '';
+		const txns = await pb.collection('transactions').getFullList({
+			sort: '-date',
+			filter: `postings_via_transaction.account?="${accountId}"`,
+			expand: 'postings_via_transaction',
+		});
+
+		const none = createElement('option', { value: '', textContent: '--' });
+		DOM.billTransaction.appendChild(none);
+		let selected = false;
+		txns.forEach(txn => {
+			let txnAmount = 0;
+			txn.expand.postings_via_transaction.forEach(posting => {
+				if (posting.amount > 0) txnAmount += dec(posting.amount);
+			});
+			const option = createElement('option', {
+				value: txn.id,
+				textContent: `${utcToLocal(txn.date)} ${txn.payee} ${cur(txnAmount)}`,
+			});
+			if (transactionId === txn.id) {
+				option.selected = true;
+				selected = true;
+			}
+			DOM.billTransaction.appendChild(option);
+		});
+		if (!selected) none.selected = true;
+	} catch (err) {
+		console.error('Unable to set bill transaction select', err);
+	}
+}
+
+async function editBill(id) {
+	setError(DOM.billError);
+	try {
+		const record = await pb.collection('bills').getOne(id, { expand: 'account' });
+		if (!record) throw new Error(`Unable to edit bill with id ${id}`);
+		DOM.billTitle.textContent = 'Edit Bill';
+		DOM.billId.value = record.id;
+		DOM.billDate.value = utcToLocal(record.date);
+		DOM.billAccountId.value = record.account;
+		DOM.billAccount.value = record.expand.account.name;
+		DOM.billAmount.value = cur(record.amount);
+		setBillTransactionSelect(record.account, record.transaction);
+		DOM.billTransaction.classList.remove('hide');
+		DOM.billOpenDeleteBtn.classList.remove('hide');
+	} catch (err) {
+		setError(DOM.billError, err);
 	}
 }
 

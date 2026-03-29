@@ -24,6 +24,10 @@ function openAccountForm(e) {
 	openTargetAccountForm(e.currentTarget);
 }
 
+function openBillForm(e) {
+	openTargetBillForm(e.currentTarget);
+}
+
 function openCurrencyForm(e) {
 	openTargetCurrencyForm(e.currentTarget);
 }
@@ -50,6 +54,29 @@ function openTargetAccountForm(target) {
 		editAccount(target.dataset.id);
 	}
 	if (!visibleModal) openModal(DOM.accountModal);
+}
+
+function openTargetBillForm(target) {
+	DOM.billTitle.textContent = 'Add Bill';
+	setError(DOM.billError);
+	DOM.billId.value = '';
+	DOM.billDelete.value = '';
+	DOM.billForm.reset();
+	DOM.billOpenDeleteBtn.classList.add('hide');
+	DOM.billOpenDeleteBtn.textContent = 'Delete';
+	DOM.billDeleteBtn.classList.add('hide');
+	DOM.billDate.valueAsDate = new Date();
+	setTimeout(() => DOM.billDate.focus(), 100);
+	DOM.billAccountId.value = '';
+	DOM.billAccount.value = '';
+	DOM.billAmount.value = '';
+	DOM.billTransaction.innerHTML = '';
+	DOM.billTransaction.classList.add('hide');
+	if (target.dataset.id) {
+		DOM.billId.value = target.dataset.id;
+		editBill(target.dataset.id);
+	}
+	if (!visibleModal) openModal(DOM.billModal);
 }
 
 function openTargetCurrencyForm(target) {
@@ -100,6 +127,12 @@ function toggleAccountDelete(e) {
 		DOM.accountOpenDeleteBtn.textContent = 'Delete' : DOM.accountOpenDeleteBtn.textContent = 'Cancel';
 }
 
+function toggleBillDelete(e) {
+	DOM.billDeleteBtn.classList.toggle('hide');
+	DOM.billDeleteBtn.classList.contains('hide') ?
+		DOM.billOpenDeleteBtn.textContent = 'Delete' : DOM.billOpenDeleteBtn.textContent = 'Cancel';
+}
+
 function toggleCurrencyDelete(e) {
 	DOM.currencyDeleteBtn.classList.toggle('hide');
 	DOM.currencyDeleteBtn.classList.contains('hide') ?
@@ -132,6 +165,28 @@ async function renderAccounts() {
 		DOM.accountDatalist.append(createElement('option', {
 			value: acct.name,
 			dataset: { id: acct.id }
+		}));
+	});
+}
+
+async function renderBills() {
+	const records = await pb.collection('bills').getFullList({
+		sort: 'date',
+		expand: 'account',
+	});
+	DOM.billList.innerHTML = '';
+	records.forEach((bill) => {
+		DOM.billList.append(createElement('tr', {
+			class: 'bill-row pointer row-hover',
+			dataset: { id: bill.id },
+			children: [
+				createElement('th', { attributes: { scope: 'row' }, textContent: utcToLocal(bill.date) }),
+				createElement('td', { textContent: bill.expand.account.name }),
+				createElement('td', { textContent: cur(bill.amount), class: 'text-right' }),
+				createElement('td', { class: 'text-right' }),
+				createElement('td', { class: 'text-right' }),
+				createElement('td', { textContent: bill.transaction }),
+			],
 		}));
 	});
 }
@@ -264,6 +319,7 @@ async function renderAll() {
 	await renderCurrencies();
 	await renderAccounts();
 	await renderTransactions();
+	await renderBills();
 	await renderDatalists();
 	await renderReports();
 	await updateCurrencySelects();

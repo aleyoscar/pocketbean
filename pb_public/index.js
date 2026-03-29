@@ -3,18 +3,22 @@ function attachListeners() {
 	DOM.asideBtns.forEach((b) => b.addEventListener('click', openSection));
 
 	DOM.accountAddBtn.addEventListener('click', openAccountForm);
+	DOM.billAddBtn.addEventListener('click', openBillForm);
 	DOM.currencyAddBtn.addEventListener('click', openCurrencyForm);
 	DOM.transactionAddBtn.addEventListener('click', openTransactionForm);
 
 	DOM.accountForm.addEventListener('submit', submitAccount);
+	DOM.billForm.addEventListener('submit', submitBill);
 	DOM.currencyForm.addEventListener('submit', submitCurrency);
 	DOM.transactionForm.addEventListener('submit', submitTransaction);
 
 	DOM.accountOpenDeleteBtn.addEventListener('click', toggleAccountDelete);
+	DOM.billOpenDeleteBtn.addEventListener('click', toggleBillDelete);
 	DOM.currencyOpenDeleteBtn.addEventListener('click', toggleCurrencyDelete);
 	DOM.transactionOpenDeleteBtn.addEventListener('click', toggleTransactionDelete);
 
 	DOM.accountDeleteBtn.addEventListener('click', deleteAccount);
+	DOM.billDeleteBtn.addEventListener('click', deleteBill);
 	DOM.currencyDeleteBtn.addEventListener('click', deleteCurrency);
 	DOM.transactionDeleteBtn.addEventListener('click', deleteTransaction);
 
@@ -30,10 +34,18 @@ function attachListeners() {
 		input.addEventListener('input', syncAccountId)
 	);
 
+	DOM.billAccount.addEventListener('input', syncBillAccountId);
+
 	DOM.accountList.addEventListener('click', (e) => {
 		e.preventDefault();
 		const acct = e.target.closest('.account-row');
 		if (acct) openTargetAccountForm(acct);
+	});
+
+	DOM.billList.addEventListener('click', (e) => {
+		e.preventDefault();
+		const bill = e.target.closest('.bill-row');
+		if (bill) openTargetBillForm(bill);
 	});
 
 	DOM.currencyList.addEventListener('click', (e) => {

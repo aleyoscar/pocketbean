@@ -45,6 +45,9 @@
 									<a id="accounts-btn" class="pointer aside-btn secondary" data-section="accounts">Accounts</a>
 								</li>
 								<li>
+									<a id="bills-btn" class="pointer aside-btn secondary" data-section="bills">Bills</a>
+								</li>
+								<li>
 									<a id="currencies-btn" class="pointer aside-btn secondary" data-section="currencies">Currencies</a>
 								</li>
 								<li>
@@ -70,6 +73,22 @@
 							</tr>
 						</thead>
 						<tbody id="account-list"></tbody>
+					</table>
+				</section>
+				<section id="bills" class="hide">
+					<h3>Bills <button id="bill-add-btn">Add</button></h3>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Account</th>
+								<th scope="col" class="text-right">Amount</th>
+								<th scope="col" class="text-right">Paid</th>
+								<th scope="col" class="text-right">Status</th>
+								<th scope="col">Link</th>
+							</tr>
+						</thead>
+						<tbody id="bill-list"></tbody>
 					</table>
 				</section>
 				<section id="currencies" class="hide">
@@ -177,6 +196,59 @@
 					<button id="account-delete-btn" class="float-left danger hide">Delete?</button>
 					<button class="toggle-modal secondary" data-target="account-modal">Cancel</button>
 					<button id="account-submit" data-target="account-modal" form="account-form">Submit</button>
+				</footer>
+			</article>
+		</dialog>
+
+		<dialog id="bill-modal">
+			<article>
+				<header>
+					<button class="toggle-modal" aria-label="Close" rel="prev" data-target="bill-modal"></button>
+					<h2 id="bill-title">Bill</h2>
+				</header>
+				<form id="bill-form">
+					<input type="hidden" id="bill-id" name="bill-id" value="">
+					<input type="hidden" id="bill-delete" name="bill-delete" value="">
+					<textarea id="bill-error" class="hide" name="bill-error" aria-invalid="true" readonly></textarea>
+					<fieldset>
+						<input
+							type="date"
+							id="bill-date"
+							name="bill-date"
+							aria-label="Date"
+							required>
+						<input
+							type="hidden"
+							id="bill-account-id"
+							name="bill-account-id">
+						<input
+							type="text"
+							id="bill-account"
+							name="bill-account"
+							list="account-datalist"
+							placeholder="Account"
+							aria-label="Account"
+							required>
+						<input
+							type="number"
+							id="bill-amount"
+							name="bill-amount"
+							placeholder="Amount"
+							aria-label="Amount"
+							step="0.01"
+							required>
+						<select
+							id="bill-transaction"
+							name="bill-transaction"
+							class="hide">
+						</select>
+					</fieldset>
+				</form>
+				<footer>
+					<button id="bill-open-delete-btn" class="float-left secondary">Delete</button>
+					<button id="bill-delete-btn" class="float-left danger hide">Delete?</button>
+					<button class="toggle-modal secondary" data-target="bill-modal">Cancel</button>
+					<button id="bill-submit" data-target="bill-modal" form="bill-form">Submit</button>
 				</footer>
 			</article>
 		</dialog>
