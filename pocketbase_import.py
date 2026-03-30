@@ -9,31 +9,31 @@ import os
 load_dotenv()
 
 # ========================= CONFIG FROM .env =========================
-PB_URL = os.getenv("PB_URL", "http://127.0.0.1:8090")
-PB_ADMIN_EMAIL = os.getenv("PB_ADMIN_EMAIL")
-PB_ADMIN_PASSWORD = os.getenv("PB_ADMIN_PASSWORD")
-BEANCOUNT_FILE = os.getenv("BEANCOUNT_FILE")
+PORT_URL = os.getenv("PORT_URL", "http://127.0.0.1:8090")
+PORT_ADMIN_EMAIL = os.getenv("PORT_ADMIN_EMAIL")
+PORT_ADMIN_PASSWORD = os.getenv("PORT_ADMIN_PASSWORD")
+PORT_FILE = os.getenv("PORT_FILE")
 
-TARGET_USER_ID = os.getenv("TARGET_USER_ID")   # Optional
+PORT_TARGET_USER = os.getenv("PORT_TARGET_USER")   # Optional
 
 # Validation
-if not PB_ADMIN_EMAIL or not PB_ADMIN_PASSWORD:
-    raise ValueError("Missing PB_ADMIN_EMAIL or PB_ADMIN_PASSWORD in .env file")
+if not PORT_ADMIN_EMAIL or not PORT_ADMIN_PASSWORD:
+    raise ValueError("Missing PORT_ADMIN_EMAIL or PORT_ADMIN_PASSWORD in .env file")
 
-if not BEANCOUNT_FILE:
-    raise ValueError("Missing BEANCOUNT_FILE in .env file")
+if not PORT_FILE:
+    raise ValueError("Missing PORT_FILE in .env file")
 
-BEANCOUNT_FILE = Path(BEANCOUNT_FILE)
+PORT_FILE = Path(PORT_FILE)
 
-if not BEANCOUNT_FILE.exists():
-    raise FileNotFoundError(f"Beancount file not found: {BEANCOUNT_FILE}")
+if not PORT_FILE.exists():
+    raise FileNotFoundError(f"Beancount file not found: {PORT_FILE}")
 # =========================================================
 
-pb = PocketBase(PB_URL)
-pb.admins.auth_with_password(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD)
+pb = PocketBase(PORT_URL)
+pb.admins.auth_with_password(PORT_ADMIN_EMAIL, PORT_ADMIN_PASSWORD)
 
 print("Loading Beancount file...")
-entries, errors, options = loader.load_file(str(BEANCOUNT_FILE))
+entries, errors, options = loader.load_file(str(PORT_FILE))
 
 if errors:
     print(f"Warnings/Errors while loading: {len(errors)}")
@@ -80,7 +80,7 @@ for entry in entries:
 
         # Create Transaction
         tx_data = {
-            "user": TARGET_USER_ID or pb.authStore.record.id,
+            "user": PORT_TARGET_USER or pb.authStore.record.id,
             "date": entry.date.isoformat(),
             "flag": getattr(entry, 'flag', None) == "*",
             "payee": (entry.payee or "UNKNOWN").strip(),
@@ -103,7 +103,7 @@ for entry in entries:
             if currency_name not in currency_map:
                 print(f"  → Creating currency: {currency_name}")
                 curr_data = {
-                    "user": TARGET_USER_ID or pb.authStore.record.id,
+                    "user": PORT_TARGET_USER or pb.authStore.record.id,
                     "name": currency_name,
                     "default": False
                 }
@@ -115,7 +115,7 @@ for entry in entries:
             if account_name not in account_map:
                 print(f"  → Creating account: {account_name}")
                 acct_data = {
-                    "user": TARGET_USER_ID or pb.authStore.record.id,
+                    "user": PORT_TARGET_USER or pb.authStore.record.id,
                     "name": account_name,
                     "currency": currency_map[currency_name]
                 }
@@ -125,7 +125,7 @@ for entry in entries:
 
             # Create Posting
             posting_data = {
-                "user": TARGET_USER_ID or pb.authStore.record.id,
+                "user": PORT_TARGET_USER or pb.authStore.record.id,
                 "transaction": tx.id,
                 "account": account_map[account_name],
                 "amount": amount,
