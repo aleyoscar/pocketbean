@@ -53,6 +53,8 @@ const DOM = {
 	billAccount: document.getElementById('bill-account'),
 	billAccountId: document.getElementById('bill-account-id'),
 	billAmount: document.getElementById('bill-amount'),
+	billPaid: document.getElementById('bill-paid'),
+	billPaidLabel: document.getElementById('bill-paid-label'),
 	billTransaction: document.getElementById('bill-transaction'),
 	billOpenDeleteBtn: document.getElementById('bill-open-delete-btn'),
 	billDeleteBtn: document.getElementById('bill-delete-btn'),

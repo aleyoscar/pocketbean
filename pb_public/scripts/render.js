@@ -70,6 +70,8 @@ function openTargetBillForm(target) {
 	DOM.billAccountId.value = '';
 	DOM.billAccount.value = '';
 	DOM.billAmount.value = '';
+	DOM.billPaid.checked = false;
+	DOM.billPaidLabel.classList.add('hide');
 	DOM.billTransaction.innerHTML = '';
 	DOM.billTransaction.classList.add('hide');
 	if (target.dataset.id) {
@@ -169,13 +171,37 @@ async function renderAccounts() {
 	});
 }
 
+function getBillStatus(bill) {
+	if (!bill) return "UNKNOWN";
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const billDate = new Date(bill.date);
+	billDate.setHours(0, 0, 0, 0);
+
+	const hasTransaction = !!bill.transaction;
+	const isBillPaid = bill.paid;
+	const transactionCleared = hasTransaction ? bill.expand.transaction.flag : false;
+	const DUE = { text: "DUE", class: "alert" };
+	const OVERDUE = { text: "OVERDUE", class: "neg" };
+	const PENDING = { text: "PENDING", class: "secondary" };
+	const PAID = { text: "PAID", class: "primary" };
+
+	if (!hasTransaction) {
+		if (isBillPaid) return PENDING;
+		return billDate >= today ? DUE : OVERDUE;
+	}
+	if (!transactionCleared) return PENDING;
+	return PAID;
+}
+
 async function renderBills() {
 	const records = await pb.collection('bills').getFullList({
 		sort: 'date',
-		expand: 'account',
+		expand: 'account,transaction',
 	});
 	DOM.billList.innerHTML = '';
 	records.forEach((bill) => {
+		const billStatus = getBillStatus(bill);
 		DOM.billList.append(createElement('tr', {
 			class: 'bill-row pointer row-hover',
 			dataset: { id: bill.id },
@@ -184,7 +210,10 @@ async function renderBills() {
 				createElement('td', { textContent: bill.expand.account.name }),
 				createElement('td', { textContent: cur(bill.amount), class: 'text-right' }),
 				createElement('td', { class: 'text-right' }),
-				createElement('td', { class: 'text-right' }),
+				createElement('td', {
+					class: 'text-right',
+					innerHTML: `<b class=${billStatus.class}>${billStatus.text}</b>`,
+				}),
 				createElement('td', { textContent: bill.transaction }),
 			],
 		}));

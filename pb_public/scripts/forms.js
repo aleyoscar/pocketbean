@@ -81,6 +81,7 @@ async function submitBill(e) {
 				date: localToUtc(DOM.billDate.value.trim()),
 				account: DOM.billAccountId.value.trim(),
 				amount: dec(DOM.billAmount.value),
+				paid: DOM.billPaid.checked,
 				transaction: !DOM.billTransaction.value || DOM.billTransaction.value === '--' ? '' : DOM.billTransaction.value,
 			};
 			if (id) record = await pb.collection('bills').update(id, data);
@@ -249,6 +250,8 @@ async function editBill(id) {
 		DOM.billAccountId.value = record.account;
 		DOM.billAccount.value = record.expand.account.name;
 		DOM.billAmount.value = cur(record.amount);
+		DOM.billPaid.checked = record.paid;
+		DOM.billPaidLabel.classList.remove('hide');
 		setBillTransactionSelect(record.account, record.transaction);
 		DOM.billTransaction.classList.remove('hide');
 		DOM.billOpenDeleteBtn.classList.remove('hide');
