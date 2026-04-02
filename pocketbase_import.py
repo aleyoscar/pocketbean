@@ -10,15 +10,15 @@ load_dotenv()
 
 # ========================= CONFIG FROM .env =========================
 PORT_URL = os.getenv("PORT_URL", "http://127.0.0.1:8090")
-PORT_ADMIN_EMAIL = os.getenv("PORT_ADMIN_EMAIL")
-PORT_ADMIN_PASSWORD = os.getenv("PORT_ADMIN_PASSWORD")
+PB_ADMIN_EMAIL = os.getenv("PB_ADMIN_EMAIL")
+PB_ADMIN_PASSWORD = os.getenv("PB_ADMIN_PASSWORD")
 PORT_FILE = os.getenv("PORT_FILE")
 
 PORT_TARGET_USER = os.getenv("PORT_TARGET_USER")   # Optional
 
 # Validation
-if not PORT_ADMIN_EMAIL or not PORT_ADMIN_PASSWORD:
-    raise ValueError("Missing PORT_ADMIN_EMAIL or PORT_ADMIN_PASSWORD in .env file")
+if not PB_ADMIN_EMAIL or not PB_ADMIN_PASSWORD:
+    raise ValueError("Missing PB_ADMIN_EMAIL or PB_ADMIN_PASSWORD in .env file")
 
 if not PORT_FILE:
     raise ValueError("Missing PORT_FILE in .env file")
@@ -30,7 +30,7 @@ if not PORT_FILE.exists():
 # =========================================================
 
 pb = PocketBase(PORT_URL)
-pb.admins.auth_with_password(PORT_ADMIN_EMAIL, PORT_ADMIN_PASSWORD)
+pb.admins.auth_with_password(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD)
 
 print("Loading Beancount file...")
 entries, errors, options = loader.load_file(str(PORT_FILE))
