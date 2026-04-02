@@ -12,12 +12,18 @@ function toggleAuth() {
 	return isLoggedIn;
 }
 
+function toggleAside(e) {
+	e.stopPropagation();
+	DOM.asideMenu.classList.toggle('open');
+}
+
 function openSection(e) {
 	e.preventDefault();
 	DOM.sections.forEach((s) =>
 		s.classList.toggle('hide', !s.id.includes(e.currentTarget.dataset.section)));
 	DOM.asideBtns.forEach((b) =>
 		b.classList.toggle('secondary', b.dataset.section != e.currentTarget.dataset.section));
+	toggleAside(e);
 }
 
 function openAccountForm(e) {
@@ -181,10 +187,10 @@ function getBillStatus(bill) {
 	const hasTransaction = !!bill.transaction;
 	const isBillPaid = bill.paid;
 	const transactionCleared = hasTransaction ? bill.expand.transaction.flag : false;
-	const DUE = { text: "DUE", class: "alert" };
-	const OVERDUE = { text: "OVERDUE", class: "neg" };
-	const PENDING = { text: "PENDING", class: "secondary" };
-	const PAID = { text: "PAID", class: "primary" };
+	const DUE = { text: "DUE", class: "" };
+	const OVERDUE = { text: "OVERDUE", class: "bg-red" };
+	const PENDING = { text: "PENDING", class: "bg-gray" };
+	const PAID = { text: "PAID", class: "bg-green" };
 
 	if (!hasTransaction) {
 		if (isBillPaid) return PENDING;
@@ -194,27 +200,42 @@ function getBillStatus(bill) {
 	return PAID;
 }
 
+function createBillAmount(bill, billPaidAmount) {
+	const billTransaction = bill.transaction ? createElement('a', {
+			textContent: '(i) ',
+			dataset: { tooltip: bill.transaction, },
+		}) : null;
+	const billEl = createElement('td', { class: 'text-right' });
+	if (billTransaction) billEl.appendChild(billTransaction);
+	billEl.appendChild(createElement('span', {
+		innerHTML: billPaidAmount > 0 ?
+			`<a data-tooltip="${cur(bill.amount)}">${cur(billPaidAmount)}</a>` :
+			cur(bill.amount),
+	}));
+	return billEl;
+}
+
 async function renderBills() {
 	const records = await pb.collection('bills').getFullList({
 		sort: 'date',
-		expand: 'account,transaction',
+		expand: 'account,transaction,transaction.postings_via_transaction',
 	});
 	DOM.billList.innerHTML = '';
 	records.forEach((bill) => {
 		const billStatus = getBillStatus(bill);
+		let billPaidAmount = 0;
+		if (bill.transaction) {
+			for (const posting of bill.expand.transaction.expand.postings_via_transaction) {
+				if (bill.transaction && bill.account === posting.account) billPaidAmount = dec(billPaidAmount + Math.abs(posting.amount));
+			}
+		}
 		DOM.billList.append(createElement('tr', {
-			class: 'bill-row pointer row-hover',
+			class: `bill-row pointer row-hover ${billStatus.class}`,
 			dataset: { id: bill.id },
 			children: [
 				createElement('th', { attributes: { scope: 'row' }, textContent: utcToLocal(bill.date) }),
 				createElement('td', { textContent: bill.expand.account.name }),
-				createElement('td', { textContent: cur(bill.amount), class: 'text-right' }),
-				createElement('td', { class: 'text-right' }),
-				createElement('td', {
-					class: 'text-right',
-					innerHTML: `<b class=${billStatus.class}>${billStatus.text}</b>`,
-				}),
-				createElement('td', { textContent: bill.transaction }),
+				createBillAmount(bill, billPaidAmount),
 			],
 		}));
 	});
@@ -265,36 +286,45 @@ async function renderTransactions(page=1) {
 	DOM.transactionList.innerHTML = '';
 	for (const txn of records.items) {
 		let txnAmount = 0;
+		let txnCurr = '';
 		const postings = txn.expand.postings_via_transaction;
 		const postingRows = [];
 		postings.sort((a, b) => (a.order || 0) - (b.order || 0));
 		for (const posting of postings) {
 			txnAmount += posting.amount > 0 ? posting.amount : 0;
+			if (posting.amount > 0) txnCurr = posting.expand.currency.name;
 			postingRows.push(createElement('tr', {
 				class: `transaction-posting-row pointer row-background hide`,
 				dataset: { transaction: txn.id },
 				children: [
+					createElement('td', { textContent: posting.expand.account.name, attributes: { colspan: '2' }, }),
 					createElement('td'),
-					createElement('td'),
-					createElement('td'),
-					createElement('td'),
-					createElement('td', { textContent: posting.expand.account.name }),
-					createElement('td', { textContent: cur(posting.amount), class: 'text-right' }),
-					createElement('td', { textContent: posting.expand.currency.name, class: 'text-right' }),
+					createElement('td', { textContent: `${cur(posting.amount)} ${posting.expand.currency.name}`, class: 'text-right' }),
 				]
 			}));
 		}
+
 		DOM.transactionList.append(createElement('tr', {
-			class: 'transaction-row pointer row-hover',
+			class: `transaction-row pointer row-hover ${!txn.flag ? 'flagged' : ''}`,
 			dataset: { id: txn.id },
 			children: [
 				createElement('th', { attributes: { scope: 'row' }, textContent: utcToLocal(txn.date) }),
-				createElement('td', { textContent: txn.flag ? '*' : '!' }),
+				// createElement('td', { textContent: txn.flag ? '*' : '!' }),
 				createElement('td', { textContent: txn.payee }),
-				createElement('td', { textContent: txn.notes || '' }),
-				createElement('td', { textContent: txn.tags.trim() || '' }),
-				createElement('td', { textContent: cur(txnAmount), class: 'text-right' }),
+				createNotes(txn),
 				createElement('td', {
+					innerHTML: `<span>${cur(txnAmount)}</span><span class='hide-sm'> ${txnCurr}</span>`,
+					class: 'text-right',
+				}),
+			],
+		}));
+		postingRows.forEach(row => DOM.transactionList.append(row));
+		DOM.transactionList.append(createElement('tr', {
+			class: 'transaction-posting-row pointer row-background hide',
+			dataset: { transaction: txn.id },
+			children: [
+				createElement('td', {
+					attributes: { colspan: '5' },
 					class: 'text-right',
 					children: [
 						createElement('button', {
@@ -304,9 +334,8 @@ async function renderTransactions(page=1) {
 						}),
 					],
 				}),
-			]
+			],
 		}));
-		postingRows.forEach(row => DOM.transactionList.append(row));
 	}
 }
 

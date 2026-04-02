@@ -124,3 +124,21 @@ function createPosting() {
 
 	return row;
 }
+
+function createNotes(txn, parent='td') {
+	const txnNotes = `${txn.notes.trim()} ${txn.tags.trim()}`.split(/\s+/).join(' ').trim();
+	if (!txnNotes) return createElement(parent);
+	return createElement(parent, {
+		children: [
+			createElement('a', {
+				class: 'hide-lg',
+				dataset: { tooltip: txnNotes },
+				textContent: '(i)',
+			}),
+			createElement('span', {
+				class: 'hide-sm',
+				textContent: txnNotes,
+			}),
+		],
+	});
+}

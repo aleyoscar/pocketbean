@@ -20,18 +20,31 @@ Column  576    356    220    136   84     52     32
 	--pico-border-width: 0.0625rem;
 
 	/* --pico-heading-font-weight: 600; */
-	--width-sm: 576px;
-	--padding-xxl: 4.2rem;
+	/* SIZE     PADDING                WIDTH                 COLUMN
+	/* XXL */ --padding-xxl: 4.2rem;
+	/* XL  */                                              --col-xl: 356px;
+	/* LG  */                                              --col-lg: 220px;
+	/* MD  */                                              --col-md: 136px;
+	/* SM  */                        --width-sm:    576px; --col-sm: 84px;
+	/* XS  */                                              --col-xs: 52px;
+	/* XXS */
 
 	--color-yellow: #977000;
+	--color-red-bg: #30130A;
+	--color-red-bg-hover: #45150C;
+	--color-gray-bg: #303030;
+	--color-gray-bg-hover: #3B3B3B;
+	--color-green-bg: #173806;
+	--color-green-bg-hover: #173806;
 }
 
 .alert { color: var(--color-yellow); }
 .align-center { align-items: center; }
-.col-width-xl { width: 356px; }
-.col-width-lg { width: 220px; }
-.col-width-md { width: 136px; }
-.col-width-sm { width: 84px; }
+.col-xl { width: var(--col-xl); }
+.col-lg { width: var(--col-lg); }
+.col-md { width: var(--col-md); }
+.col-sm { width: var(--col-sm); }
+.col-xs { width: var(--col-xs); }
 .flex { display: flex; }
 .flex-wrap { flex-wrap: wrap; }
 .float-left { float: left; }
@@ -40,6 +53,7 @@ Column  576    356    220    136   84     52     32
 .gap-sm { gap: calc(var(--pico-spacing) * 0.618); }
 .grid-xxs { grid-template-columns: 220px 1fr; }
 .hide { display: none; }
+.hide-lg { display: none; }
 .inline-block { display: inline-block; }
 .justify-center { justify-content: center; }
 .max-width-sm { max-width: var(--width-sm); }
@@ -61,8 +75,39 @@ Column  576    356    220    136   84     52     32
 .row-hover:active th,
 .row-hover:hover td,
 .row-hover:active td { background-color: var(--pico-table-row-stripped-background-color); }
+.flagged,
+.flagged th,
+.flagged td { background-color: var(--color-red-bg); }
+.flagged:hover,
+.flagged:hover th,
+.flagged:hover td,
+.flagged:active,
+.flagged:active th,
+.flagged:active td { background-color: var(--color-red-bg-hover); }
 .space-between { justify-content: space-between; }
 .text-right { text-align: right; }
+
+.bg-red,
+.bg-red th,
+.bg-red td { background: var(--color-red-bg); color: var(--pico-color); }
+.bg-red:hover th,
+.bg-red:hover td,
+.bg-red:active th,
+.bg-red:active td { background: var(--color-red-bg-hover); }
+.bg-gray,
+.bg-gray th,
+.bg-gray td { background: var(--color-gray-bg); color: var(--pico-color); }
+.bg-gray:hover th,
+.bg-gray:hover td,
+.bg-gray:active th,
+.bg-gray:active td { background: var(--color-gray-bg-hover); }
+.bg-green,
+.bg-green th,
+.bg-green td { background: var(--color-green-bg); color: var(--pico-color); }
+.bg-green:hover th,
+.bg-green:hover td,
+.bg-green:active th,
+.bg-green:active td { background: var(--color-green-bg-hover); }
 
 button.danger {
 	background-color: var(--pico-form-element-invalid-border-color);
@@ -97,4 +142,75 @@ details.details-left > summary::before {
 
 details.details-left[open] > summary::before {
 	transform: scale(0.75) rotate(0deg);
+}
+
+#aside-menu {
+	position: relative;
+	transform: none;
+	box-shadow: none;
+	width: 220px;
+}
+
+#aside-menu::after {
+	display: none;
+}
+
+@media only screen and (min-width: 1024px) {
+	.hide-lg { display: none; }
+}
+
+@media only screen and (max-width: 1023px) {
+	.grid-sm-100 { grid-template-columns: 1fr; }
+	.hide-lg { display: unset; }
+	.hide-sm { display: none; }
+
+	#aside-menu {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 260px;
+		background-color: var(--pico-background-color);
+		border-right: 1px solid var(--pico-border-color);
+		transform: translateX(-100%);
+		transition: transform 0.3s ease;
+		z-index: 1000;
+		overflow-y: auto;
+		box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+	}
+
+	#aside-menu.open {
+		background-color: var(--pico-card-background-color);
+		transform: translateX(0);
+	}
+
+	/* Overlay when menu is open */
+	#aside-menu::after {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0,0,0,0.4);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s ease;
+		z-index: -1;
+	}
+
+	#aside-menu.open::after {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	/* Close button styling */
+	#aside-menu button.float-right {
+		margin: 1rem;
+	}
+
+	/* Make sure nav takes full height */
+	#aside-menu nav {
+		padding: 1rem;
+	}
 }

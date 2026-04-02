@@ -2,6 +2,8 @@ const pb = new PocketBase("/");
 
 const DOM = {
 	asideBtns: document.querySelectorAll('.aside-btn'),
+	asideMenu: document.getElementById('aside-menu'),
+	asideMenuBtns: document.querySelectorAll('.aside-menu-btn'),
 	account: document.getElementById('account'),
 
 	accountList: document.getElementById('account-list'),

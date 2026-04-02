@@ -21,8 +21,11 @@
 		<div id="wrapper" class="container">
 			<header>
 				<nav class="flex space-between">
+					<ul class="hide-lg">
+						<li><button class="aside-menu-btn">Menu</button></li>
+					</ul>
 					<ul>
-						<li><h5>PocketBean</h5></li>
+						<li><h5 class="mb-0">PocketBean</h5></li>
 					</ul>
 					<ul>
 						<li>
@@ -36,9 +39,10 @@
 					</ul>
 				</nav>
 			</header>
-			<main class="grid grid-xxs">
-				<aside>
+			<main class="grid grid-xxs grid-sm-100">
+				<aside id="aside-menu">
 					<article>
+						<button class="aside-menu-btn hide-lg">Close</button>
 						<nav>
 							<ul>
 								<li>
@@ -77,15 +81,17 @@
 				</section>
 				<section id="bills" class="hide">
 					<h3>Bills <button id="bill-add-btn">Add</button></h3>
+					<p>Status:
+						<kbd class="bg-red">OVERDUE</kbd>
+						<kbd class="bg-gray">PENDING</kbd>
+						<kbd class="bg-green">PAID</kbd>
+					</p>
 					<table>
 						<thead>
 							<tr>
-								<th scope="col">Date</th>
+								<th scope="col" class="col-sm">Date</th>
 								<th scope="col">Account</th>
-								<th scope="col" class="text-right">Amount</th>
-								<th scope="col" class="text-right">Paid</th>
-								<th scope="col" class="text-right">Status</th>
-								<th scope="col">Link</th>
+								<th scope="col" class="col-md text-right">Amount</th>
 							</tr>
 						</thead>
 						<tbody id="bill-list"></tbody>
@@ -108,13 +114,10 @@
 					<table>
 						<thead>
 							<tr>
-								<th scope="col" class="col-width-md">Date</th>
-								<th scope="col" class="col-width-sm">Flag</th>
-								<th scope="col" class="col-width-lg">Payee</th>
-								<th scope="col" class="col-width-xl">Notes</th>
-								<th scope="col">Tags</th>
-								<th scope="col" class="text-right">Amount</th>
-								<th scope="col" class="col-width-sm"></th>
+								<th scope="col" class="col-sm">Date</th>
+								<th scope="col" class="col-lg">Payee</th>
+								<th scope="col"><span class="hide-sm">Notes</span><span class="hide-lg">i</span></th>
+								<th scope="col" class="text-right col-md">Amount</th>
 							</tr>
 						</thead>
 						<tbody id="transaction-list"></tbody>

@@ -1,6 +1,7 @@
 
 function attachListeners() {
 	DOM.asideBtns.forEach((b) => b.addEventListener('click', openSection));
+	DOM.asideMenuBtns.forEach((b) => b.addEventListener('click', toggleAside));
 
 	DOM.accountAddBtn.addEventListener('click', openAccountForm);
 	DOM.billAddBtn.addEventListener('click', openBillForm);
