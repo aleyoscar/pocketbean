@@ -17,6 +17,20 @@ function toggleAside(e) {
 	DOM.asideMenu.classList.toggle('open');
 }
 
+function loadingOn(target) {
+	target.querySelectorAll('fieldset').forEach(el => el.disabled = true);
+	target.querySelectorAll('button').forEach(b => b.disabled = true);
+	target.querySelectorAll('input[type=button]').forEach(i => i.disabled = true);
+	target.querySelector('h2').setAttribute('aria-busy', 'true');
+}
+
+function loadingOff(target) {
+	target.querySelectorAll('fieldset').forEach(el => el.disabled = false);
+	target.querySelectorAll('button').forEach(b => b.disabled = false);
+	target.querySelectorAll('input[type=button]').forEach(i => i.disabled = false);
+	target.querySelector('h2').removeAttribute('aria-busy');
+}
+
 function openSection(e) {
 	e.preventDefault();
 	DOM.sections.forEach((s) =>

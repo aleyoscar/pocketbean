@@ -43,6 +43,7 @@ async function createPostings(transactionId) {
 async function submitAccount(e) {
 	e.preventDefault();
 	setError(DOM.accountError);
+	loadingOn(DOM.accountModal);
 	try {
 		const id = DOM.accountId.value;
 		const del = DOM.accountDelete.value;
@@ -63,12 +64,15 @@ async function submitAccount(e) {
 		closeModal(DOM.accountModal);
 	} catch (err) {
 		setError(DOM.accountError, err);
+	} finally {
+		loadingOff(DOM.accountModal);
 	}
 }
 
 async function submitBill(e) {
 	e.preventDefault();
 	setError(DOM.billError);
+	loadingOn(DOM.billModal);
 	try {
 		const id = DOM.billId.value;
 		const del = DOM.billDelete.value;
@@ -91,12 +95,15 @@ async function submitBill(e) {
 		closeModal(DOM.billModal);
 	} catch (err) {
 		setError(DOM.billError, err);
+	} finally {
+		loadingOff(DOM.billModal);
 	}
 }
 
 async function submitCurrency(e) {
 	e.preventDefault();
 	setError(DOM.currencyError);
+	loadingOn(DOM.currencyModal);
 	try {
 		const id = DOM.currencyId.value;
 		const del = DOM.currencyDelete.value;
@@ -116,6 +123,8 @@ async function submitCurrency(e) {
 		closeModal(DOM.currencyModal);
 	} catch (err) {
 		setError(DOM.currencyError, err);
+	} finally {
+		loadingOff(DOM.currencyModal);
 	}
 }
 
@@ -132,7 +141,7 @@ async function deleteAllPostings(transactionId) {
 async function submitTransaction(e) {
 	e.preventDefault();
 	setError(DOM.transactionError);
-
+	loadingOn(DOM.transactionModal);
 	try {
 		const id = DOM.transactionId.value;
 		const isDelete = DOM.transactionDelete.value === 'delete';
@@ -167,6 +176,8 @@ async function submitTransaction(e) {
 
 	} catch (err) {
 		setError(DOM.transactionError, err);
+	} finally {
+		loadingOff(DOM.transactionModal);
 	}
 }
 
