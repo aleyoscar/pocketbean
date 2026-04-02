@@ -43,11 +43,12 @@ async function renderBalances() {
 			sort: "name",
 		});
 
+		DOM.balancesTree.textContent = '';
 		postings.forEach(posting => {
 			renderAccountTree(posting, DOM.balancesTree);
 		});
 
-		DOM.balancesList.innerHTML = '';
+		DOM.balancesList.textContent = '';
 		accounts.forEach(acct => {
 			if (acct.track) {
 				const acctId = `balances-${acct.name.toLowerCase().replaceAll(':', '-')}`;
